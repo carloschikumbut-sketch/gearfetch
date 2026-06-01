@@ -1,0 +1,1586 @@
+/* --- 1. THEME & RESET --- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;600;700&display=swap');
+
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --red: #e60000;
+    --medium-gray: #e5e5e5;
+    --light-gray: #f5f5f5;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--white);
+    color: var(--black);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;   /* Add this line */
+    width: 100%;          /* Add this line */
+    max-width: 100vw;     /* Add this line */
+}
+
+body.no-scroll { overflow: hidden; }
+
+/* --- 2. BASE COMPONENTS --- */
+.fa-solid, .fas, .fa-regular, .far, .fa-brands {
+    color: var(--black) !important;
+    display: inline-block;
+}
+
+.announcement-bar {
+    background: var(--black);
+    color: var(--white);
+    text-align: center;
+    padding: 12px 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.main-header {
+    background: var(--white);
+    border-bottom: 1px solid var(--medium-gray);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+/* --- 3. LAPTOP LAYOUT (min-width: 1025px) --- */
+@media (min-width: 1025px) {
+    .header-container {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr; 
+        align-items: center;
+        padding: 0 5%;
+        height: 100px;
+        max-width: 1800px;
+        margin: 0 auto;
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .header-center-group {
+        display: flex;
+        align-items: center;
+        gap: 40px; 
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .desktop-nav {
+        display: flex;
+        gap: 25px;
+        align-items: center;
+    }
+
+    /* LAPTOP DROPDOWN HOVER LOGIC */
+    .has-dropdown {
+        position: relative;
+    }
+
+    .has-dropdown .submenu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--white);
+        border: 1px solid var(--medium-gray);
+        min-width: 180px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        list-style: none;
+        padding: 10px 0;
+        z-index: 1100;
+    }
+
+    .has-dropdown:hover .submenu {
+        display: block;
+    }
+
+    .submenu li a {
+        padding: 10px 20px;
+        display: block;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--black);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+    }
+
+    .submenu li a:hover {
+        background: var(--light-gray);
+        color: var(--red);
+    }
+
+    .brand-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 34px; 
+        font-weight: 500;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        color: var(--black);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .desktop-hide { display: none !important; }
+}
+
+/* --- 4. MOBILE LAYOUT (max-width: 1024px) --- */
+@media (max-width: 1024px) {
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 70px;
+        padding: 0 5%;
+    }
+
+    .header-center-group {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .brand-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 20px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--black);
+        text-decoration: none;
+    }
+
+    .mobile-hide { display: none !important; }
+    .desktop-hide { display: flex !important; }
+
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+    }
+
+    .hamburger span {
+        width: 28px;
+        height: 2px;
+        background: var(--black);
+    }
+
+    /* MOBILE ACCORDION CLICK LOGIC */
+    .mobile-nav-links .submenu {
+        display: none;
+        background: var(--light-gray);
+        list-style: none;
+    }
+
+    .mobile-nav-links li.submenu-active .submenu {
+        display: block;
+    }
+    
+    .submenu-active .fa-chevron-down {
+        transform: rotate(180deg);
+    }
+}
+
+/* --- 5. SHARED LOGO & NAV STYLES --- */
+.brand-logo span {
+    color: var(--red);
+    margin-left: 6px;
+}
+
+.desktop-nav a, .dropdown-trigger {
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--black);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.utility-icons {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.utility-icons .icon-search {
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+
+.icon-cart { position: relative; }
+.cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: var(--red);
+    color: var(--white);
+    font-size: 9px;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* --- 6. MOBILE DRAWER UI --- */
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 85%;
+    max-width: 380px;
+    height: 100%;
+    background: var(--white);
+    z-index: 2000;
+    transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 15px 0 40px rgba(0,0,0,0.15);
+}
+.mobile-drawer.active { left: 0; }
+.drawer-header { padding: 25px; display: flex; justify-content: flex-end; }
+.drawer-close { font-size: 32px; cursor: pointer; }
+.mobile-nav-links { list-style: none; flex-grow: 1; overflow-y: auto; }
+.mobile-nav-links li { border-bottom: 1px solid #eeeeee; }
+.mobile-nav-links a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--black);
+    letter-spacing: 1.2px;
+}
+
+.drawer-footer { padding: 30px 25px; border-top: 1px solid var(--medium-gray); display: flex; flex-direction: column; gap: 12px; }
+.drawer-btn { width: 100%; padding: 16px; text-align: center; text-transform: uppercase; font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-decoration: none; }
+.btn-signin { background: var(--black); color: var(--white); }
+.btn-register { background: var(--white); color: var(--black); border: 1px solid var(--black); }
+
+/* --- 7. SEARCH & LIVE RESULTS --- */
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100px;
+    background: var(--white);
+    z-index: 3000;
+    transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.search-overlay.active { left: 0; }
+
+.search-container {
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    gap: 20px;
+    position: relative;
+}
+
+.search-input-wrapper input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.search-close { font-size: 35px; cursor: pointer; margin-left: 30px; }
+
+.search-results-dropdown {
+    position: absolute;
+    top: 60px;
+    left: 40px;
+    width: 100%;
+    max-height: 400px;
+    background: var(--white);
+    border: 1px solid var(--medium-gray);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 3001;
+}
+
+.search-results-dropdown.active { display: flex; }
+
+.result-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    gap: 15px;
+    text-decoration: none;
+    color: var(--black);
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.result-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+.result-name { font-size: 13px; font-weight: 700; text-transform: uppercase; }
+.result-price { font-size: 12px; color: var(--red); font-weight: 600; }
+
+/* --- 8. HERO --- */
+.hero-wrapper { padding: 40px 0; }
+.hero-container { display: flex; align-items: center; padding: 0 5%; gap: 60px; }
+.carousel-track img { width: 100%; height: 550px; object-fit: cover; }
+
+@media (max-width: 768px) {
+    .hero-container { flex-direction: column; text-align: center; }
+    .carousel-track img { height: 350px; }
+}
+.brand-page-wrapper {
+    padding: 60px 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.brand-hero {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.brand-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+}
+
+.brand-hero p {
+    color: var(--medium-gray);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Ensure the grid looks clean */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+@media (max-width: 1024px) {
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+    .product-grid { grid-template-columns: 1fr; }
+}
+/* --- SHARED PAGE STYLES --- */
+.collection-wrapper, .static-page-container {
+    padding: 80px 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 60vh;
+}
+
+/* Dynamic Page Headers */
+.collection-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.collection-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 48px);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+/* Static Page Content (Help/Returns) */
+.content-box {
+    max-width: 800px; /* Narrower for readability */
+    margin: 0 auto;
+}
+
+.content-box h1 { font-family: 'Playfair Display', serif; margin-bottom: 20px; }
+.content-box h3 { margin: 30px 0 10px; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
+.content-box p { margin-bottom: 15px; color: #444; }
+.content-box ul { margin-left: 20px; margin-bottom: 20px; }
+.last-updated { font-size: 12px; color: var(--red); font-weight: 700; }
+
+/* Product Grid for Collection Pages */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 40px 20px;
+}
+/* --- EMPTY STATE UI --- */
+.empty-state {
+    grid-column: 1 / -1; /* Take up the whole grid width */
+    text-align: center;
+    padding: 100px 20px;
+    background: var(--light-gray);
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.empty-state i {
+    font-size: 50px;
+    color: var(--medium-gray);
+    margin-bottom: 20px;
+}
+
+.empty-state h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.empty-state p {
+    color: #666;
+    max-width: 400px;
+    margin: 0 auto 30px;
+}
+
+/* Reusing your button style or creating a quick primary one */
+.btn-primary {
+    display: inline-block;
+    background: var(--black);
+    color: var(--white);
+    padding: 15px 40px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: var(--transition);
+}
+
+.btn-primary:hover {
+    background: var(--red);
+}
+/* --- HERO SLIDER --- */
+.hero-slider {
+    position: relative;
+    height: 85vh;
+    width: 100%;
+    overflow: hidden;
+    background: #111;
+}
+
+.hero-slide {
+    height: 85vh;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    padding: 0 8%;
+}
+
+.hero-content {
+    color: white;
+    max-width: 700px;
+    animation: fadeInUp 0.8s ease;
+}
+
+.hero-subtitle {
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--red); /* Assuming you have a red accent */
+}
+
+.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 8vw, 80px);
+    line-height: 1.1;
+    margin: 15px 0;
+}
+
+.btn-hero {
+    background: white;
+    color: black;
+    padding: 16px 40px;
+    font-weight: 800;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 15px;
+    transition: 0.3s;
+}
+
+.btn-hero:hover { background: var(--red); color: white; }
+
+/* --- BRAND CARDS --- */
+.brand-section { padding: 80px 5%; }
+
+.brand-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    height: 400px;
+}
+
+.brand-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background-color: #eee;
+    background-size: cover;
+    background-position: center;
+    text-decoration: none;
+}
+
+.brand-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 30px;
+    color: white;
+    transition: background 0.3s;
+}
+
+.brand-card:hover .brand-overlay { background: rgba(0,0,0,0.5); }
+.brand-overlay h3 { font-size: 24px; letter-spacing: 2px; }
+
+@media (max-width: 768px) {
+    .brand-grid { grid-template-columns: 1fr; height: auto; }
+    .brand-card { height: 250px; }
+}
+/* --- UPDATED SLIDER STYLES --- */
+@keyframes infiniteScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } 
+}
+
+.animate-infinite-scroll {
+  display: flex;
+  width: max-content;
+  animation: infiniteScroll 30s linear infinite;
+}
+
+.hero-slide-card {
+  width: 220px;
+  height: 280px;
+  background: #1a1a1a;
+  border-radius: 16px;
+  overflow: hidden; /* Clips image to corners */
+  flex-shrink: 0;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.hero-slide-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This makes the image fill the entire card */
+  transition: transform 0.5s ease;
+}
+
+.hero-slide-card:hover img {
+  transform: scale(1.1);
+}
+
+/* Overlay for text so it's readable over the full image */
+.card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  color: white;
+}
+
+.card-overlay h4 { font-size: 13px; margin-bottom: 2px; }
+.card-overlay p { color: #dc2626; font-weight: bold; font-size: 12px; }
+/* --- RESPONSIVE HERO HEIGHT & TEXT --- */
+#hero-section {
+    height: 400px; /* Base height for laptop */
+    display: flex;
+    align-items: center;
+}
+
+/* Laptop/Desktop Text Sizes */
+#headline {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.1;
+}
+
+/* MOBILE FIXES (Screens smaller than 1024px) */
+@media (max-width: 1024px) {
+    #hero-section {
+        height: 450px; /* Slightly taller on mobile to fit stacked elements */
+        padding: 20px 0;
+    }
+
+    #headline {
+        font-size: 2rem; /* Shrink title so it doesn't hog space */
+        margin-bottom: 0.5rem;
+    }
+
+    #subheadline {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    /* Shrink the Slider Cards for Mobile */
+    .hero-slide-card {
+        width: 140px;  /* Narrower cards */
+        height: 180px; /* Shorter cards to fit the 400px section */
+        border-radius: 12px;
+    }
+
+    .card-overlay h4 {
+        font-size: 10px;
+    }
+
+    .card-overlay p {
+        font-size: 10px;
+    }
+}
+
+/* --- THE SLIDER TRACK --- */
+.animate-infinite-scroll {
+    display: flex;
+    width: max-content;
+    animation: infiniteScroll 25s linear infinite;
+}
+
+@keyframes infiniteScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.hero-slide-card {
+    width: 200px; /* Laptop width */
+    height: 260px; /* Laptop height */
+    background: #1a1a1a;
+    border-radius: 16px;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.hero-slide-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+/* --- SKELETON GHOST ANIMATION --- */
+.skeleton-card {
+    width: 220px;
+    height: 280px;
+    background: #1a1a1a;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.skeleton-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.05),
+        transparent
+    );
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Mobile Adjustment for Skeletons */
+@media (max-width: 1024px) {
+    .skeleton-card {
+        width: 150px;
+        height: 200px;
+    }
+}
+/* Brand Tiles Custom Styles */
+.brand-tile {
+    cursor: pointer;
+    box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.5);
+}
+
+.brand-tile h3 {
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+    transition: color 0.3s ease;
+}
+
+.brand-tile:hover h3 {
+    color: #dc2626; /* Your brand red */
+}
+
+/* For the italicized text effect */
+.font-black.italic {
+    font-weight: 900;
+}
+/* Brand Section Adjustments */
+#brand-discovery .brand-card {
+    background-color: #f9f9f9; /* Subtle light gray so the white logo area pops */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ensure the image is 100% clear from the start */
+#brand-discovery .brand-card img {
+    opacity: 1;
+    filter: grayscale(0); /* Removes any previous gray filters */
+}
+
+/* Hover State: Bold Red Border */
+#brand-discovery .brand-card:hover {
+    background-color: #ffffff;
+    box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.1);
+}
+.brand-card {
+    position: relative;
+    display: block; /* Ensures the anchor tag takes up full space */
+}
+
+.brand-card img {
+    /* This ensures the image fills the card 100% */
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Crops the image slightly to fill the container perfectly */
+    object-position: center; /* Keeps the logo centered if it's cropped */
+    display: block;
+}
+
+/* --- LATEST ARRIVALS CUSTOM CARD --- */
+.arrival-card {
+    background: #ffffff;
+    border-radius: 28px; /* Matching the soft, large corners */
+    padding: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.arrival-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* Image Container */
+.card-img-container {
+    background: #f3f4f6;
+    border-radius: 20px;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-img-container img {
+    width: 85%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+}
+
+.arrival-card:hover img {
+    transform: scale(1.08);
+}
+
+/* Badge & Heart Icons */
+.discount-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #ffffff;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #1f2937;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.wishlist-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    color: #ef4444; /* Theme Heart Color */
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Add to Cart Icon Button */
+.add-to-cart-btn {
+    width: 44px;
+    height: 44px;
+    background: transparent; /* Removes the dark box */
+    border: 1px solid #e5e7eb; /* Optional: Very light border to define the area */
+    color: #1f2937; /* Dark icon color */
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1.2rem;
+}
+.add-to-cart-btn:hover {
+    color: #dc2626; /* Icon turns Red */
+    border-color: #dc2626; /* Border turns Red */
+    transform: scale(1.1);
+    background: #fef2f2; /* Optional: Very light red glow background */
+}
+/* Ensure the container isn't squashing the info */
+.product-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; /* Keeps price and button aligned at bottom */
+    width: 100%;
+}
+
+/* Mobile Horizontal Scroll Fix */
+@media (max-width: 1024px) {
+    #latest-arrivals-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 20px;
+        scrollbar-width: none; /* Hide scrollbar Firefox */
+    }
+    #latest-arrivals-grid::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
+    
+    .arrival-card {
+        min-width: 260px; /* Fixed width on mobile for sliding */
+        scroll-snap-align: start;
+    }
+}
+.category-card {
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+
+.category-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Category Title styling for readability */
+.category-card h3 {
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover h3 {
+    transform: translateY(-5px);
+}
+/* THE IDENTICAL CARD STYLE */
+.arrival-card {
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 12px;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.card-img-container {
+    background: #f3f4f6; /* That light gray box in your 2nd image */
+    border-radius: 20px;
+    aspect-ratio: 1/1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Stand-alone Icon Button fix */
+.add-to-cart-btn {
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+}
+/* Mobile Scroll Logic */
+@media (max-width: 1023px) {
+    .mobile-scroll-container {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 20px; /* Space for scrollbar if visible */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+    }
+
+    .mobile-scroll-container::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+    }
+
+    /* Force each card to a specific width on mobile so they don't shrink */
+    .arrival-card {
+        min-width: 280px; 
+        scroll-snap-align: start;
+        flex-shrink: 0;
+    }
+}
+
+/* Laptop Grid Logic (Handled by Tailwind lg:grid-cols-4) */
+@media (min-width: 1024px) {
+    .arrival-card {
+        min-width: 0; /* Allow grid to define width */
+    }
+}
+
+/* End-of-Scroll "View All" Card Style */
+.view-all-ghost-card {
+    min-width: 200px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #e5e7eb;
+    border-radius: 28px;
+    margin-left: 10px;
+    color: #9ca3af;
+    flex-shrink: 0;
+}
+/* Review Dot Styling */
+.review-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #d4d4d8; /* Light Gray (inactive) */
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.review-dot.active {
+    background-color: #000000; /* Black (active) */
+    transform: scale(1.3);
+}
+
+/* Ensure the container snaps correctly */
+#reviews-container {
+    scroll-snap-type: x mandatory;
+    display: flex; /* Mobile default */
+}
+
+@media (min-width: 1024px) {
+    #reviews-container {
+        display: grid; /* Desktop default */
+    }
+}
+/* Ensure FontAwesome has priority over your custom branding fonts */
+.fa-brands, .fa-solid, .fas, .fab {
+    font-family: "Font Awesome 6 Brands", "Font Awesome 6 Free" !important;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+/* 1. Make the drawer slide and stay on top of EVERYTHING */
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: -100%; 
+    width: 280px;
+    height: 100%;
+    background: #fff;
+    z-index: 9999 !important; /* Extremely high to beat any catalog filters */
+    transition: left 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto; /* Ensures it accepts clicks */
+}
+
+/* 2. Ensure the links inside are actually clickable */
+.mobile-nav-links, .mobile-nav-links li, .mobile-nav-links a {
+    position: relative;
+    z-index: 10000 !important; 
+    pointer-events: auto !important;
+}
+
+.mobile-drawer.active {
+    left: 0;
+}
+
+/* Hide submenus by default in the drawer */
+.mobile-nav-links .submenu {
+    display: none;
+    padding-left: 20px; /* Indent the items */
+    background: #f9f9f9;
+}
+
+/* Show the submenu when active */
+.mobile-nav-links .submenu.active {
+    display: block !important;
+}
+
+/* Make sure the arrow rotates smoothly */
+.mobile-nav-links .dropdown-trigger i {
+    transition: transform 0.3s ease;
+}
+
+/* FORCE FIXED HEADER */
+.main-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 9999 !important;
+    background-color: white !important;
+    border-bottom: 1px solid #eee;
+}
+
+/* PUSH HOME PAGE CONTENT DOWN 
+   (Adjust 70px if your header is taller) */
+body {
+    padding-top: 70px !important;
+}
+/* 1. Fix the Announcement Bar to the very top (0px) */
+.announcement-bar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0;
+    width: 100%;
+    height: 40px; /* Adjust if your bar is taller/shorter */
+    z-index: 10001 !important; /* Highest layer */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 2. Fix the Header to start where the Bar ends (40px) */
+.main-header {
+    position: fixed !important;
+    top: 40px !important; /* This matches the height of the bar */
+    left: 0;
+    width: 100%;
+    z-index: 10000 !important; /* Just below the bar */
+    background: white;
+    border-bottom: 1px solid #eee;
+}
+
+/* 3. Push your page content down so nothing is hidden */
+body {
+    /* Height of Bar (40px) + Height of Header (approx 70px) = 110px */
+    padding-top: 110px !important;
+}
+/* 1. Make the header container 0px tall so it doesn't push links down */
+.drawer-header {
+    height: 0px !important;
+    min-height: 0px !important;
+    position: relative;
+    display: block;
+}
+
+/* 1. Make the drawer the absolute highest layer on the screen */
+.mobile-drawer {
+    z-index: 99999 !important; 
+    background-color: #ffffff !important;
+}
+
+/* 2. Style the X and force it to the top right */
+#drawer-close {
+    display: block !important;
+    position: absolute !important;
+    top: 20px !important;
+    right: 20px !important;
+    font-size: 30px !important;
+    font-weight: bold !important;
+    color: #000000 !important;
+    cursor: pointer !important;
+    z-index: 100000 !important; /* Higher than the drawer itself */
+    line-height: 1;
+}
+/* --- PRODUCT GALLERY SPECIAL STYLES --- */
+
+/* 1. Hide scrollbars but keep swipe functionality */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* 2. Smooth Snap Scrolling for Mobile */
+#main-gallery {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+#main-gallery > div {
+    scroll-snap-align: center;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+/* 3. Thumbnail Transitions */
+.thumb-btn {
+    opacity: 0.5;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.thumb-btn:hover {
+    opacity: 0.8;
+}
+
+.thumb-btn.active {
+    opacity: 1 !important;
+    border-color: #000 !important;
+}
+
+/* 4. Desktop Adjustments */
+@media (min-width: 1024px) {
+    #main-gallery {
+        /* On desktop, we lock the height to keep the layout consistent */
+        height: 650px; 
+    }
+}
+
+/* Sticky Bar active state */
+#sticky-anchor.show-bar {
+    transform: translateY(0);
+}
+
+/* Ensure the main add-btn has consistent styling */
+.add-btn {
+    border-radius: 12px; /* Matching your premium aesthetic */
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
+/* FORCE HORIZONTAL SCROLLING FOR HOME & DETAILS */
+.mobile-scroll-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important; /* Prevents products from dropping to a second row */
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory;
+    gap: 1.5rem;
+    padding: 1rem 1rem 2rem 1rem !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure cards don't shrink and start at the beginning */
+.mobile-scroll-container .product-card {
+    flex: 0 0 280px !important; /* Fixes width so exactly 8 fit in the scroll line */
+    scroll-snap-align: start;
+    margin: 0 !important;
+}
+
+/* Hide scrollbar for a cleaner "app-like" look */
+.mobile-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+.mobile-scroll-container {
+    direction: ltr !important; /* Forces Left-to-Right orientation */
+    text-align: left !important;
+}
+.mobile-scroll-container {
+    display: flex !important;
+    flex-wrap: nowrap !important; /* Forces products into one single line */
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    gap: 1.5rem;
+    padding: 1rem 1rem 3rem 1rem !important; /* Bottom padding for the shadow */
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+}
+
+.mobile-scroll-container .product-card {
+    flex: 0 0 280px !important; /* Prevents products from shrinking */
+    scroll-snap-align: start;
+}
+/* Prevent background scroll when cart is open */
+body.cart-open {
+    overflow: hidden;
+}
+
+/* Smooth fade-in for the items as they appear */
+.item-entry {
+    animation: slideInRight 0.4s ease-out forwards;
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+/* Ensure the sidebar covers the site header */
+#cart-sidebar {
+    z-index: 10001; /* Higher than your header (usually z-50 or z-100) */
+}
+
+/* Custom scrollbar for a cleaner look */
+#side-cart-items::-webkit-scrollbar {
+    width: 4px;
+}
+#side-cart-items::-webkit-scrollbar-thumb {
+    background: #e5e5e5;
+    border-radius: 10px;
+}
+
+/* Item Animation */
+.cart-item-anim {
+    animation: slideUpFade 0.5s ease forwards;
+}
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* THE SIDEBAR: Full height but with a left gap on mobile */
+#cart-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    /* Mobile: takes up 90% width, leaving a 10% gap on the left */
+    width: 90%; 
+    background: white;
+    z-index: 10001;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Desktop: Fixed width as we discussed */
+@media (min-width: 768px) {
+    #cart-sidebar {
+        width: 500px;
+    }
+}
+
+/* Slim Scrollbar */
+#side-cart-items::-webkit-scrollbar {
+    width: 3px;
+}
+#side-cart-items::-webkit-scrollbar-thumb {
+    background: #eeeeee;
+}
+.color-swatch {
+    background: #f9f9f9;
+    padding: 2px; /* Creates a small gap between border and image */
+    cursor: pointer;
+    position: relative;
+}
+
+.color-swatch.active {
+    border-color: black;
+}
+
+.color-swatch img {
+    border-radius: 50%;
+    display: block;
+}
+
+/* Tooltip style for mobile/desktop hover */
+.color-swatch:hover::after {
+    content: attr(data-color);
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    background: black;
+    color: white;
+    padding: 2px 6px;
+    white-space: nowrap;
+    z-index: 10;
+}
+/* Ensure the grid works on Desktop */
+@media (min-width: 1024px) {
+    #curated-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+    }
+}
+
+/* Ensure the smooth scroll works on Mobile */
+@media (max-width: 1023px) {
+    .mobile-scroll-container {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 16px;
+        padding: 10px 0 20px 0;
+        /* Hide scrollbar for a clean look */
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .mobile-scroll-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Force the product cards to have a consistent width on mobile */
+    .mobile-scroll-container > div {
+        min-width: 260px;
+        scroll-snap-align: start;
+        flex-shrink: 0;
+    }
+}
+/* Ensure badge is a perfect circle over the bag icon */
+#cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #dc2626;
+    color: white;
+    font-size: 10px;
+    font-weight: 900;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
+/* Animation for the bag icon when adding items */
+.animate-bounce {
+    animation: bounce 0.5s ease infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+/* UI Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+/* --- AUTH TRANSITIONS --- */
+form {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Ensure inputs don't zoom in on iPhone */
+@media screen and (max-width: 768px) {
+    input {
+        font-size: 16px !important;
+    }
+}
+
+/* --- MOBILE ACCOUNT ICON & INITIALS --- */
+#mobile-account-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+#mobile-account-btn:active {
+    transform: scale(0.9);
+    background-color: #f4f4f5;
+}
+
+#user-initials-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    line-height: 1;
+}
+
+#mobile-account-btn.is-logged-in {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+#user-initials-circle.has-initials {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+
+/* --- UTILITY ALIGNMENT --- */
+.utility-icons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 60; /* Keeps icons above hero but below drawer overlay */
+}
+/* --- DRAWER SPECIFIC FIXES --- */
+
+/* 1. Fix: Submenu Expansion */
+/* Ensuring the submenu shows when the parent list item is toggled */
+.mobile-nav-links .submenu {
+    display: none !important;
+}
+
+.mobile-nav-links li.submenu-active .submenu,
+.mobile-nav-links li.active .submenu {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* 2. Fix: Icon Backgrounds (The "Black Box" inside circles) */
+/* This ensures the icon itself has no background, 
+   allowing your black wrapper div/anchor to show through correctly */
+.drawer-contact-info i,
+.drawer-contact-info .fa-solid,
+.drawer-contact-info .fa-brands {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 3. Fix: Drawer Close Button Transparency */
+#drawer-close, .drawer-close i {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+/* Ensure Drawer Submenus show when active */
+.mobile-nav-links .submenu {
+    display: none; /* Default hidden */
+}
+
+.mobile-nav-links li.submenu-active .submenu {
+    display: block !important;
+    padding-left: 15px;
+    background: #fafafa;
+}
+
+/* --- MOBILE DRAWER SOCIAL HOVER EFFECTS --- */
+
+/* 1. Target the circular link wrapper */
+.drawer-contact-info div + div a, 
+.drawer-contact-info a[target="_blank"] {
+    transition: all 0.3s ease !important;
+}
+
+/* 2. Change Border and Icon color on Hover/Touch */
+.drawer-contact-info a[target="_blank"]:hover,
+.drawer-contact-info a[target="_blank"]:active {
+    border-color: #dc2626 !important; /* Your Brand Red */
+    background-color: #fef2f2 !important; /* Very subtle light red glow */
+}
+
+/* 3. Force the Icon inside to turn red too */
+.drawer-contact-info a[target="_blank"]:hover i,
+.drawer-contact-info a[target="_blank"]:active i {
+    color: #dc2626 !important;
+    transform: scale(1.1); /* Subtle pop effect */
+    transition: transform 0.2s ease;
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+#main-gallery {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+}
+.gallery-slide {
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+}
+
+
+
+
+/* Global Announcement Bar Styling */
+.announcement-bar {
+    background: #000; /* Ensure black background across all pages */
+    overflow: hidden;
+    height: 40px; /* Fixed height prevents layout shifting */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#announcement-text {
+    margin: 0;
+    transition: opacity 0.5s ease-in-out; /* The secret for the smooth fade */
+    will-change: opacity;
+}

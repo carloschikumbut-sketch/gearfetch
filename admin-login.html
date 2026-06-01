@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEAR FETCH | Admin Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { background: #0D0D0D; font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="glass-card w-full max-w-md rounded-3xl p-8 shadow-2xl">
+        <div class="text-center mb-10">
+            <h1 class="text-white text-2xl font-black tracking-tighter uppercase">
+                Admin<span>Portal</span>
+            </h1>
+            <p class="text-zinc-500 text-xs mt-2 uppercase tracking-widest font-bold">Authorized Personnel Only</p>
+        </div>
+
+        <form id="login-form" class="space-y-6">
+            <div>
+                <label class="block text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+                <input type="email" id="email" required 
+                    class="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white text-sm outline-none focus:border-red-600 transition-all"
+                    placeholder="admin@sneakerlab.com">
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2 ml-1">Password</label>
+                <input type="password" id="password" required 
+                    class="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white text-sm outline-none focus:border-red-600 transition-all"
+                    placeholder="••••••••">
+            </div>
+
+            <button type="submit" id="login-btn"
+                class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl transition-all active:scale-95 shadow-lg shadow-red-600/20">
+                ACCESS DASHBOARD
+            </button>
+        </form>
+
+        <div id="error-msg" class="mt-6 text-red-500 text-xs font-bold text-center hidden uppercase tracking-tight"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const errorMsg = document.getElementById('error-msg');
+        const loginBtn = document.getElementById('login-btn');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.classList.add('hidden');
+            loginBtn.innerText = "VERIFYING...";
+            loginBtn.disabled = true;
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const { data, error } = await window._supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                errorMsg.innerText = error.message;
+                errorMsg.classList.remove('hidden');
+                loginBtn.innerText = "ACCESS DASHBOARD";
+                loginBtn.disabled = false;
+            } else {
+                // Success! Redirect to your actual admin panel file
+                window.location.href = 'admin.html';
+            }
+        });
+
+        // Check if already logged in
+        async function checkSession() {
+            const { data: { session } } = await window._supabase.auth.getSession();
+            if (session) {
+                window.location.href = 'admin.html';
+            }
+        }
+        checkSession();
+    </script>
+</body>
+</html>

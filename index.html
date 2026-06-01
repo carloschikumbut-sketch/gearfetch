@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>GEAR FETCH | Authentic Sneakers, Slides, Caps & Soccer Jerseys</title>
+    <meta name="title" content="GEAR FETCH | Authentic Sneakers, Slides, Caps & Soccer Jerseys">
+    <meta name="description" content="Elevate your style with GEAR FETCH. Shop exclusive sneaker drops, authentic soccer jerseys, caps and premium slides. Fast delivery across Zimbabwe.">
+    <link rel="icon" type="image/png" href="assets/faviconlogo1.png">
+    <meta name="keywords" content="Sneakers Zimbabwe, buy Jordan sneakers, buy Nike sneakers, New Balance, Adidas Sneakers, Caps, soccer jerseys Zimbabwe, premium slides, yeezy adidas slides, street style, authentic kicks, original shoes">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gearfetch.co.zw/"> 
+    <meta property="og:title" content="GEAR FETCH | Premium Drops & Streetwear">
+    <meta property="og:description" content="The ultimate destination for authentic sneakers, slides, apparel and limited kits. Shop the latest collection now.">
+    <meta property="og:image" content="https://gearfetch.co.zw/assets/og-marketing-banner.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://gearfetch.co.zw/">
+    <meta property="twitter:title" content="GEAR FETCH | Premium Drops & Streetwear">
+    <meta property="twitter:description" content="Shop the latest authentic sneakers, slides, caps and soccer jerseys. Fast delivery available.">
+    <meta property="twitter:image" content="https://gearfetch.co.zw/assets/og-marketing-banner.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <script>
+        if (window.console && console.warn) {
+            const originalWarn = console.warn;
+            console.warn = function (...args) {
+                if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com')) {
+                    return; // Suppresses the warning cleanly
+                }
+                originalWarn.apply(console, args);
+            };
+        }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "OnlineStore",
+      "name": "GEAR FETCH",
+      "image": "https://gearfetch.co.zw/assets/logo.png",
+      "description": "Premium Store for authentic sneakers, soccer jerseys, slides, caps and exclusive streetwear kits in Zimbabwe.",
+      "url": "https://gearfetch.co.zw/",
+      "telephone": "+263786429446",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Delivery Service",
+        "addressLocality": "Harare",
+        "addressRegion": "Harare Province",
+        "addressCountry": "ZW"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Zimbabwe"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Nationwide Delivery Service",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Door-to-door delivery across Zimbabwe"
+            }
+          }
+        }
+      },
+      "sameAs": [
+        "https://www.instagram.com/gearfetch",
+        "https://www.facebook.com/gearfetch"
+      ]
+    }
+    </script>
+
+    <style>
+       /* --- 1. CORE RESET & FONTS --- */
+    body { box-sizing: border-box; margin: 0; padding: 0; overflow-x: hidden; }
+    .font-display { font-family: 'Bebas Neue', sans-serif; }
+    .font-body { font-family: 'Inter', sans-serif; }
+
+    /* --- 2. YOUR ORIGINAL ANIMATIONS --- */
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-15deg); }
+      50% { transform: translateY(-20px) rotate(-15deg); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideRight {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(220, 38, 38, 0.7); }
+    }
+
+    .animate-float { animation: float 4s ease-in-out infinite; }
+    .animate-slide-up { animation: slideUp 0.8s ease-out forwards; }
+    .animate-slide-right { animation: slideRight 0.8s ease-out forwards; }
+    .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+
+    /* --- 3. HERO & TRUST SECTION STYLES --- */
+    .sneaker-shadow { filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.5)); }
+    .gradient-text {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .index-trust-section { padding: 60px 20px; background: #ffffff; border-top: 1px solid #f0f0f0; }
+    .indexTrustSwiper { max-width: 600px; margin: 0 auto; width: 100%; overflow: hidden; position: relative; }
+    .trust-content { text-align: center; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .trust-content i { font-size: 3rem; color: #111; margin-bottom: 20px; display: block; }
+
+    /* WHATSAPP "LIVE" PULSE */
+    .whatsapp-btn-wrapper { position: relative; display: inline-block; line-height: 0; }
+    .whatsapp-btn-wrapper::before {
+      content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 50px; height: 50px; background-color: rgba(37, 211, 102, 0.3);
+      border-radius: 50%; z-index: 0; animation: whatsapp-pulse 2s infinite;
+    }
+    .fa-whatsapp.text-green-500 { color: #25D366 !important; position: relative; z-index: 1; }
+    @keyframes whatsapp-pulse {
+      0% { transform: translate(-50%, -50%) scale(0.9); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
+    }
+
+    /* --- 4. NAVIGATION CONTROLS --- */
+    .index-slider-controls {
+      display: flex; align-items: center; justify-content: center; gap: 25px; margin-top: 30px; width: 100%;
+    }
+    .swiper-button-prev-index, .swiper-button-next-index { position: static !important; font-size: 1.2rem; color: #000; cursor: pointer; }
+    .swiper-pagination-index { position: static !important; width: auto !important; display: flex !important; gap: 8px; }
+    .swiper-pagination-index .swiper-pagination-bullet { width: 10px; height: 10px; background: #ccc; opacity: 1; }
+    .swiper-pagination-index .swiper-pagination-bullet-active { background: #000; }
+
+    /* --- 5. THE PEEK ENGINE (MOBILE GRIDS) --- */
+    #latest-drops, #curated-grid {
+      display: flex !important; flex-wrap: nowrap !important; overflow-x: auto !important;
+      scroll-snap-type: x mandatory; gap: 16px; padding: 20px 0; scrollbar-width: none;
+    }
+    #latest-drops::-webkit-scrollbar, #curated-grid::-webkit-scrollbar { display: none; }
+    #latest-drops > div, #curated-grid > div { flex: 0 0 75vw !important; scroll-snap-align: start; }
+
+    @media (min-width: 1024px) {
+      #latest-drops, #curated-grid { display: grid !important; grid-template-columns: repeat(4, 1fr); overflow-x: hidden !important; }
+      #latest-drops > div, #curated-grid > div { flex: none !important; width: auto !important; }
+    }
+
+    /* --- 6. FOOTER & MISC --- */
+    footer { margin-bottom: 0 !important; padding-bottom: calc(2rem + env(safe-area-inset-bottom)) !important; }
+    .social-pill {
+      width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
+      background: #f4f4f4; color: #000000 !important; border-radius: 50%; font-size: 1.2rem;
+      border: 1px solid #eeeeee; transition: background 0.2s ease;
+    }
+    iframe { display: none !important; }
+
+    .announcement-bar {
+        background: #000; 
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        overflow: hidden;
+    }
+
+    #announcement-text {
+        transition: opacity 0.5s ease-in-out;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .fade-out {
+        opacity: 0;
+    }
+    </style>
+</head>
+<body class="bg-white text-black">
+
+  <div class="announcement-bar">
+    <p id="announcement-text">FREE SHIPPING ON ALL ORDERS OVER $150!</p>
+  </div>
+
+  <div class="search-overlay" id="search-overlay">
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <i class="fa-solid fa-magnifying-glass"></i> 
+        <input type="text" placeholder="SEARCH SNEAKERS..." id="search-input">
+        <div id="search-results" class="search-results-dropdown"></div>
+      </div>
+      <span class="search-close" id="search-close">×</span>
+    </div>
+  </div>
+
+  <header class="main-header">
+    <div class="header-container">
+      <div class="header-left">
+        <div class="hamburger desktop-hide" id="mobile-menu-trigger">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="icon-search mobile-hide">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+      </div>
+
+      <div class="header-center-group">
+        <nav class="desktop-nav mobile-hide">
+          <a href="index.html">HOME</a>
+          <div class="has-dropdown">
+            <a href="javascript:void(0)" class="dropdown-trigger">CATALOG <i class="fa-solid fa-chevron-down"></i></a>
+            <ul class="submenu">
+              <li><a href="sneakers.html">Sneakers</a></li>
+              <li><a href="slides.html">Slides</a></li>
+              <li><a href="caps.html">Caps</a></li>
+              <li><a href="jersey.html">Soccer Jersey</a></li>
+            </ul>
+          </div>
+        </nav>
+
+        <h1 class="brand-logo">Gear<span>fetch</span></h1>
+
+        <nav class="desktop-nav mobile-hide">
+          <div class="has-dropdown">
+            <a href="javascript:void(0)" class="dropdown-trigger">SHOP BY BRAND <i class="fa-solid fa-chevron-down"></i></a>
+            <ul class="submenu">
+              <li><a href="nike-collection.html">Nike</a></li>
+              <li><a href="jordan-collection.html">Jordan</a></li>
+              <li><a href="adidas-collection.html">Adidas</a></li>
+              <li><a href="newbalance-collection.html">New Balance</a></li>
+            </ul>
+          </div>
+          <div class="has-dropdown">
+            <a href="javascript:void(0)" class="dropdown-trigger">HELP <i class="fa-solid fa-chevron-down"></i></a>
+            <ul class="submenu">
+              <li><a href="shipping-policy.html">Shipping</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+              <li><a href="returns.html">Returns</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="header-right">
+        <div class="utility-icons flex items-center gap-2">
+          <a href="account.html" id="mobile-account-btn" class="w-8 h-8 flex items-center justify-center rounded-full bg-zinc-100 overflow-hidden transition-all active:scale-90">
+              <div id="user-initials-circle" class="text-[10px] font-black uppercase flex items-center justify-center">
+                  <i class="fa-regular fa-user text-sm"></i>
+              </div>
+          </a>
+          <button id="header-cart-btn" class="icon-cart relative z-[100] cursor-pointer border-none bg-transparent p-2">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span id="cart-badge" class="cart-count absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center hidden">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header> 
+
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="drawer-header">
+      <span class="drawer-close" id="drawer-close">×</span>
+    </div>
+
+    <ul class="mobile-nav-links">
+      <li><a href="index.html">HOME</a></li>
+      <li class="has-dropdown">
+        <a href="javascript:void(0)" class="dropdown-trigger">CATALOG <i class="fa-solid fa-chevron-down"></i></a>
+        <ul class="submenu">
+          <li><a href="sneakers.html">Sneakers</a></li>
+          <li><a href="slides.html">Slides</a></li>
+          <li><a href="caps.html">Caps</a></li>
+          <li><a href="jersey.html">Soccer Jersey</a></li>
+        </ul>
+      </li>
+      <li class="has-dropdown">
+        <a href="javascript:void(0)" class="dropdown-trigger">SHOP BY BRAND <i class="fa-solid fa-chevron-down"></i></a>
+        <ul class="submenu">
+          <li><a href="nike-collection.html">Nike</a></li>
+          <li><a href="jordan-collection.html">Jordan</a></li>
+          <li><a href="adidas-collection.html">Adidas</a></li>
+          <li><a href="newbalance-collection.html">New Balance</a></li>
+        </ul>
+      </li>
+      <li class="has-dropdown">
+        <a href="javascript:void(0)" class="dropdown-trigger">HELP <i class="fa-solid fa-chevron-down"></i></a>
+        <ul class="submenu">
+          <li><a href="shipping-policy.html">Shipping</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="returns.html">Returns</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="drawer-contact-info" style="padding: 24px; border-top: 1px solid #f0f0f0; margin-top: 10px;">
+      <p style="font-size: 10px; font-weight: 800; color: #a1a1a1; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px;">Contact Details</p>
+      
+      <a href="tel:+263786429446" style="display: flex; align-items: center; gap: 15px; text-decoration: none; color: #111; margin-bottom: 18px; transition: 0.2s;">
+        <div style="background: #f5f5f7; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+          <i class="fa-solid fa-phone" style="color: #111; font-size: 13px; background: transparent !important;"></i>
+        </div>
+        <p style="font-size: 13px; font-weight: 600; margin: 0;">+263 786 429 446</p>
+      </a>
+
+      <a href="mailto:support@gearfetch.com" style="display: flex; align-items: center; gap: 15px; text-decoration: none; color: #111; margin-bottom: 25px;">
+        <div style="background: #f5f5f7; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+          <i class="fa-solid fa-envelope" style="color: #111; font-size: 13px; background: transparent !important;"></i>
+        </div>
+        <p style="font-size: 13px; font-weight: 600; margin: 0;">support@gearfetch.com</p>
+      </a>
+
+      <p style="font-size: 10px; font-weight: 800; color: #a1a1a1; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 15px;">Follow Us</p>
+      <div style="display: flex; gap: 10px;">
+        <a href="https://instagram.com/..." target="_blank" class="social-circle" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #e5e5e5; display: flex; align-items: center; justify-content: center; color: #111; text-decoration: none; transition: 0.3s;">
+          <i class="fa-brands fa-instagram" style="font-size: 16px; background: transparent !important;"></i>
+        </a>
+        <a href="https://facebook.com/..." target="_blank" class="social-circle" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #e5e5e5; display: flex; align-items: center; justify-content: center; color: #111; text-decoration: none; transition: 0.3s;">
+          <i class="fa-brands fa-facebook-f" style="font-size: 14px; background: transparent !important;"></i>
+        </a>
+        <a href="https://tiktok.com/..." target="_blank" class="social-circle" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #e5e5e5; display: flex; align-items: center; justify-content: center; color: #111; text-decoration: none; transition: 0.3s;">
+          <i class="fa-brands fa-tiktok" style="font-size: 14px; background: transparent !important;"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="drawer-footer" style="padding: 24px; display: flex; flex-direction: column; gap: 12px; margin-top: auto;">
+      <div id="drawer-user-status">
+          <a href="account.html" style="display: block; background: #111; color: #fff !important; text-align: center; padding: 16px 0; font-weight: 700; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; border-radius: 8px; text-decoration: none;">
+              Sign In
+          </a>
+      </div>
+      <a href="account.html" style="display: block; background: #fff; color: #111 !important; text-align: center; padding: 16px 0; font-weight: 700; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; border: 1px solid #e5e5e5; border-radius: 8px; text-decoration: none;">
+          Create Account
+      </a>
+    </div>
+  </div>
+
+  <div id="hero-wrapper" class="w-full overflow-hidden">
+    <style>
+      /* Treadmill Animation for the initials */
+      @keyframes treadmill {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+
+      .treadmill-container {
+        display: flex;
+        width: max-content;
+        animation: treadmill 10s linear infinite;
+      }
+
+      .initial-circle {
+        width: 28px;
+        height: 28px;
+        border-radius: 9999px;
+        border: 2px solid #0D0D0D;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 8px;
+        color: #FFFFFF;
+        margin-left: -12px;
+        flex-shrink: 0;
+      }
+
+      .avatar-window {
+        mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+        width: 80px;
+        overflow: hidden;
+        display: flex;
+      }
+
+      /* FIX: Custom responsive height for desktop to prevent clipping */
+      @media (min-width: 1024px) {
+        #hero-section {
+          min-height: 600px !important; /* Increased height for desktop */
+          padding-top: 4rem;
+          padding-bottom: 4rem;
+        }
+      }
+    </style>
+
+    <!-- HERO SECTION -->
+    <section id="hero-section" class="relative w-full overflow-hidden py-8 lg:py-0" style="background: #0D0D0D; min-height: 400px; display: flex; align-items: center;">
+      <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute top-10 left-10 w-64 h-64 rounded-full opacity-10 blur-3xl" style="background: #dc2626;"></div>
+        <div class="absolute bottom-10 right-10 w-72 h-72 rounded-full opacity-10 blur-3xl" style="background: #dc2626;"></div>
+      </div>
+
+      <div class="relative z-10 flex flex-col lg:flex-row items-center justify-center lg:justify-between px-4 lg:px-12 w-full gap-8 lg:gap-4">
+        <div class="flex-none lg:flex-1 max-w-xl text-center lg:text-left">
+          <span class="inline-block px-3 py-1 rounded-full mb-4 text-[10px] font-bold tracking-widest animate-pulse" style="background: rgba(220, 38, 38, 0.2); color: #dc2626; border: 1px solid #dc2626;">
+            NEW ARRIVALS NOW LIVE
+          </span>
+
+          <h1 id="headline" class="font-display leading-tight tracking-tight mb-2 animate-slide-up" style="color: #FFFFFF;">
+            SAW IT?    <br> WANT IT?<br><span class="gradient-text">THEN FETCH IT!</span>
+          </h1>
+
+          <p id="subheadline" class="text-xs lg:text-sm mb-6 max-w-md mx-auto lg:mx-0 animate-slide-up opacity-80" style="color: #A0A0A0; animation-delay: 0.1s;">
+            Authentic footwear and apparel from authentic Global Brands. Local Zimbabwean Prices. Delivered to your doorstep.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+            <a href="catalog.html" style="text-decoration: none;">
+              <button id="cta-button" class="px-8 py-3 rounded-full font-bold text-xs transition-all hover:scale-105 active:scale-95" style="background: #dc2626; color: #FFFFFF; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);">
+                SHOP NOW
+              </button>
+            </a>
+            
+            <div class="flex items-center gap-1 opacity-90">
+              <div class="avatar-window">
+                <div class="treadmill-container">
+                  <div class="initial-circle" style="background: #333;">CC</div>
+                  <div class="initial-circle" style="background: #dc2626;">LD</div>
+                  <div class="initial-circle" style="background: #555;">JM</div>
+                  <div class="initial-circle" style="background: #222;">TK</div>
+                  <div class="initial-circle" style="background: #dc2626;">BW</div>
+                  <div class="initial-circle" style="background: #444;">RN</div>
+                  <div class="initial-circle" style="background: #333;">CC</div>
+                  <div class="initial-circle" style="background: #dc2626;">RC</div>
+                  <div class="initial-circle" style="background: #555;">JM</div>
+                  <div class="initial-circle" style="background: #222;">BK</div>
+                  <div class="initial-circle" style="background: #dc2626;">ZT</div>
+                  <div class="initial-circle" style="background: #444;">RW</div>
+                  <div class="initial-circle" style="background: #333;">JF</div>
+                  <div class="initial-circle" style="background: #dc2626;">MC</div>
+                  <div class="initial-circle" style="background: #555;">TC</div>
+                  <div class="initial-circle" style="background: #222;">ED</div>
+                  <div class="initial-circle" style="background: #dc2626;">CK</div>
+                  <div class="initial-circle" style="background: #444;">RN</div>
+                  <div class="initial-circle" style="background: #333;">CC</div>
+                  <div class="initial-circle" style="background: #dc2626;">RC</div>
+                  <div class="initial-circle" style="background: #555;">JJ</div>
+                  <div class="initial-circle" style="background: #222;">MH</div>
+                  <div class="initial-circle" style="background: #dc2626;">BT</div>
+                  <div class="initial-circle" style="background: #444;">NM</div>
+                </div>
+              </div>
+              <span class="text-[10px] text-white font-bold ml-1">1.3K+ Happy Shoppers</span>
+            </div>
+          </div>
+
+          <div class="mt-8 flex gap-6 justify-center lg:justify-start opacity-50 text-[9px] uppercase tracking-widest" style="color: #FFFFFF;">
+            <span><i class="fa-solid fa-truck-fast mr-2"></i> Fast Delivery</span>
+            <span><i class="fa-solid fa-shield-check mr-2"></i> 100% Authentic</span>
+          </div>
+        </div>
+
+        <div class="flex-none lg:flex-1 relative w-full overflow-hidden">
+          <div id="hero-slider-track" class="flex gap-4 animate-infinite-scroll"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- latest arrivals SECTION -->
+  <section id="latest-arrivals" class="py-16 px-4 lg:px-12 bg-white">
+      <div class="flex justify-between items-center mb-8">
+          <div>
+              <h2 class="text-black text-2xl lg:text-3xl font-display font-black uppercase">Latest Drops</h2>
+          </div>
+          <a href="catalog.html" class="text-red-600 font-bold text-sm hover:underline tracking-widest">VIEW ALL</a>
+      </div>
+      <div id="latest-drops" class="flex overflow-x-auto pb-8 gap-4 snap-x no-scrollbar"></div>
+  </section>
+
+  <!-- explore categories SECTION -->
+  <section id="explore-categories" class="py-16 px-4 lg:px-12 bg-white">
+      <div class="flex flex-col mb-12 text-center lg:text-left">
+          <h2 class="text-black text-2xl lg:text-4xl font-display uppercase tracking-tighter font-black">Explore Categories</h2>
+          <p class="text-zinc-500 text-sm mt-2">Find the perfect item for every occasion.</p>
+          <div class="h-1 w-20 bg-red-600 mt-4 mx-auto lg:mx-0"></div>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <a href="sneakers.html" class="category-card group relative h-48 lg:h-64 overflow-hidden rounded-2xl bg-zinc-50 border-4 border-transparent hover:border-red-600 transition-all duration-300">
+              <img src="images/Gemini_Generated_Image_cx67tucx67tucx67.png" alt="Performance" class="w-full h-full object-contain bg-zinc-100 transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                  <h3 class="text-white font-black italic text-xl lg:text-2xl uppercase tracking-tighter">Sneakers</h3>
+              </div>
+          </a>
+          <a href="slides.html" class="category-card group relative h-48 lg:h-64 overflow-hidden rounded-2xl bg-zinc-50 border-4 border-transparent hover:border-red-600 transition-all duration-300">
+              <img src="images/Gemini_Generated_Image_zfqzc6zfqzc6zfqz.png" alt="Performance" class="w-full h-full object-contain bg-zinc-100 transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                  <h3 class="text-white font-black italic text-xl lg:text-2xl uppercase tracking-tighter">Slides</h3>
+              </div>
+          </a>
+          <a href="caps.html" class="category-card group relative h-48 lg:h-64 overflow-hidden rounded-2xl bg-zinc-50 border-4 border-transparent hover:border-red-600 transition-all duration-300">
+              <img src="images/Gemini_Generated_Image_zh7mubzh7mubzh7m.png" alt="Performance" class="w-full h-full object-contain bg-zinc-100 transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                  <h3 class="text-white font-black italic text-xl lg:text-2xl uppercase tracking-tighter">Caps</h3>
+              </div>
+          </a>
+          <a href="jersey.html" class="category-card group relative h-48 lg:h-64 overflow-hidden rounded-2xl bg-zinc-50 border-4 border-transparent hover:border-red-600 transition-all duration-300">
+              <img src="images/Gemini_Generated_Image_mq04s2mq04s2mq04.png" alt="Performance" class="w-full h-full object-contain bg-zinc-100 transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                  <h3 class="text-white font-black italic text-xl lg:text-2xl uppercase tracking-tighter">Jerseys</h3>
+              </div>
+          </a>
+      </div>
+  </section>
+
+  <!-- shop by brand SECTION -->
+  <section id="brand-discovery" class="py-16 px-4 lg:px-12 bg-white">
+      <div class="flex flex-col mb-12 text-center lg:text-left">
+          <h2 class="text-black text-2xl lg:text-4xl font-display uppercase tracking-tighter font-black">Shop by Brand</h2>
+          <p class="text-zinc-500 text-sm mt-2">Filter the collection by your favorite brand.</p>
+          <div class="h-1 w-20 bg-red-600 mt-4 mx-auto lg:mx-0"></div>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <a href="nike-collection.html" class="brand-card group relative h-48 lg:h-64 overflow-hidden rounded-2xl bg-zinc-50 border-4 border-transparent hover:border-red-600 transition-all duration-300">
+              <img src="images/nikelogo.jpg" alt="Nike" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+          </a>
+          <a href="jordan-collection.html" class="brand-card group relative h-48 lg:h-64 overflow-hidden rounded-2xl bg-zinc-50 border-4 border-transparent hover:border-red-600 transition-all duration-300">
+              <img src="images/jordanlogo.jpg" alt="Jordan" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+          </a>
+          <a href="adidas-collection.html" class="brand-card group relative h-48 lg:h-64 overflow-hidden rounded-2xl bg-zinc-50 border-4 border-transparent hover:border-red-600 transition-all duration-300">
+              <img src="images/adidaslogo.jpg" alt="Adidas" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+          </a>
+          <a href="newbalance-collection.html" class="brand-card group relative h-48 lg:h-64 overflow-hidden rounded-2xl bg-zinc-50 border-4 border-transparent hover:border-red-600 transition-all duration-300">
+              <img src="images/nblogo.jpg" alt="New Balance" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+          </a>
+      </div>
+  </section>
+
+  <!-- trending SECTION -->
+  <section id="curated-section" class="py-16 px-4 lg:px-12 bg-white">
+      <div class="flex justify-between items-center mb-8">
+          <div>
+             <h2 class="text-black text-2xl lg:text-3xl font-display font-black uppercase">Curated For You</h2>
+          </div>
+          <a href="catalog.html" class="text-red-600 font-bold text-sm hover:underline tracking-widest">VIEW ALL</a>
+      </div>
+     <div id="curated-grid" class="flex overflow-x-auto pb-8 gap-4 snap-x no-scrollbar lg:grid lg:grid-cols-4"></div>
+  </section>
+       
+  <!-- carousel SECTION -->
+  <section class="index-trust-section">
+      <div class="swiper indexTrustSwiper">
+          <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                  <div class="trust-content">
+                      <i class="fa-solid fa-truck-fast"></i>
+                      <h3>Fast Shipping Nationwide</h3>
+                      <p>Delivery costs on all orders may differ due to delivery location. <br>
+                         Free delivery on all orders above $150 – no hidden costs.</p>
+                  </div>
+              </div>
+              
+              <div class="swiper-slide">
+                  <div class="trust-content">
+                      <a href="https://wa.me/26378642446?text=Hi%20GEAR FETCH%20Support!" target="_blank" class="block hover:scale-105 transition-transform">
+                          <div class="whatsapp-btn-wrapper">
+                              <i class="fa-brands fa-whatsapp text-green-500"></i>
+                          </div>
+                          <h3>Customer support</h3>
+                          <p>Tap here to chat on WhatsApp. <br> Available 7 days a week.</p>
+                      </a>
+                  </div>
+              </div>
+
+              <div class="swiper-slide">
+                  <div class="trust-content">
+                      <i class="fa-solid fa-mobile-retro"></i>
+                      <h3>Local Payments</h3>
+                      <p>We proudly accept EcoCash, <br> InnBucks & Bank transfers.</p>
+                  </div>
+              </div>
+
+              <div class="swiper-slide">
+                  <div class="trust-content">
+                      <i class="fa-solid fa-credit-card"></i>
+                      <h3>Secure payment</h3>
+                      <p>Your payment data is protected and treated confidentially.</p>
+                  </div>
+              </div>
+          </div>
+
+          <div class="index-slider-controls">
+              <div class="swiper-button-prev-index"><i class="fa-solid fa-chevron-left"></i></div>
+              <div class="swiper-pagination-index"></div>
+              <div class="swiper-button-next-index"><i class="fa-solid fa-chevron-right"></i></div>
+          </div>
+      </div>
+  </section>
+
+  <style>
+      .footer-link-icon {
+          transition: all 0.3s ease;
+      }
+      .footer-link-icon i {
+          color: #ffffff !important;
+      }
+      @media (hover: hover) {
+          .footer-link-icon:hover {
+              transform: translateY(-3px);
+          }
+          .footer-link-icon:hover i {
+              color: #dc2626 !important; 
+          }
+          .footer-link-icon:hover span {
+              color: #ffffff;
+          }
+      }
+      .payment-card {
+          width: 65px;
+          height: 36px;
+          background-color: #ffffff;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 4px;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+          transition: all 0.2s ease;
+      }
+      @media (min-width: 768px) {
+          .payment-card {
+              width: 85px;
+              height: 42px;
+          }
+      }
+  </style>
+
+  <footer class="bg-zinc-900 text-white pt-16 pb-10 px-4 lg:px-20 border-t border-zinc-800">
+      <div class="max-w-7xl mx-auto">
+          <div class="flex flex-row justify-between items-start mb-16 w-full">
+              <a href="contact.html" class="footer-link-icon flex flex-col items-center flex-1 text-center">
+                  <i class="fa-solid fa-headset text-xl md:text-3xl mb-2 md:mb-3"></i>
+                  <span class="text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] md:tracking-widest text-zinc-400">Contact US</span>
+              </a>
+              <a href="faq.html" class="footer-link-icon flex flex-col items-center flex-1 text-center">
+                  <i class="fa-solid fa-handshake-angle text-xl md:text-3xl mb-2 md:mb-3"></i>
+                  <span class="text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] md:tracking-widest text-zinc-400">Lets Engage</span>
+              </a>
+              <a href="shipping-policy.html" class="footer-link-icon flex flex-col items-center flex-1 text-center">
+                  <i class="fa-solid fa-truck-fast text-xl md:text-3xl mb-2 md:mb-3"></i>
+                  <span class="text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] md:tracking-widest text-zinc-400">Shipping & Returns</span>
+              </a>
+              <a href="returns.html" class="footer-link-icon flex flex-col items-center flex-1 text-center">
+                  <i class="fa-solid fa-scale-balanced text-xl md:text-3xl mb-2 md:mb-3"></i>
+                  <span class="text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] md:tracking-widest text-zinc-400">Legal</span>
+              </a>
+          </div>
+
+          <div class="border border-zinc-800 py-8 px-4 rounded-2xl flex flex-col items-center justify-center">
+              <p class="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.5em] mb-8">WE ACCEPT:</p>
+              <div class="flex flex-wrap justify-center gap-3 md:gap-6 w-full max-w-2xl">
+                  <div class="payment-card hover:brightness-110">
+                      <img src="images/ecocash.png" alt="EcoCash" class="max-h-full max-w-full object-contain">
+                  </div>
+                  <div class="payment-card hover:brightness-110">
+                      <img src="images/innbucks.png" alt="InnBucks" class="max-h-full max-w-full object-contain">
+                  </div>
+                  <div class="payment-card hover:brightness-110 p-0 overflow-hidden">
+                      <img src="images/zimswitch.png" alt="Zimswitch" class="w-full h-full object-cover">
+                  </div>
+                  <div class="payment-card hover:brightness-110">
+                      <img src="images/visa.png" alt="Visa" class="max-h-full max-w-full object-contain">
+                  </div>
+                  <div class="payment-card hover:brightness-110">
+                      <img src="images/mastercard.png" alt="Mastercard" class="max-h-full max-w-full object-contain">
+                  </div>
+              </div>
+          </div>
+
+          <div class="mt-12 pt-8 border-t border-zinc-800 flex flex-col sm:flex-row justify-between items-center gap-6">
+              <p class="text-zinc-600 text-[10px] font-black tracking-[0.4em] uppercase">© 2026 GEAR FETCH</p>
+              <p class="text-zinc-600 text-[10px] font-black uppercase tracking-[0.2em]">Webapp Developed by CarlosSSS</p>
+          </div>
+      </div>
+  </footer>
+
+  <div class="drawer-overlay" id="drawer-overlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 98; opacity: 0; visibility: hidden; transition: all 0.3s ease;"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/catalog.js"></script> 
+  <script src="js/script.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // --- ANNOUNCEMENT BAR CYCLING ---
+    const announcements = [
+        "FREE SHIPPING ON ALL ORDERS OVER $150!",
+        "SAME DAY DELIVERY IN HARARE | NEXT DAY NATIONWIDE PICKUP POINTS",
+        "CHAT WITH US ON WHATSAPP FOR EXCLUSIVE DEALS",
+        "NEW DROPS EVERY FRIDAY - DON'T MISS OUT!",
+        "SECURE PAYMENTS VIA ECOCASH & INNBUCKS"
+    ];
+
+    let currentIndex = 0;
+    const announcementEl = document.getElementById('announcement-text');
+
+    if (announcementEl) {
+        // Explicitly load statement 0 immediately upon page render initialization
+        announcementEl.textContent = announcements[0];
+
+        setInterval(() => {
+            // 1. Start Fade Out
+            announcementEl.classList.add('fade-out');
+
+            setTimeout(() => {
+                // 2. Change the text after it's invisible
+                currentIndex = (currentIndex + 1) % announcements.length;
+                announcementEl.textContent = announcements[currentIndex];
+                
+                // 3. Fade back in
+                announcementEl.classList.remove('fade-out');
+            }, 500); // This matches the 0.5s transition in CSS
+        }, 5000); // 5000ms = 5 seconds
+    }
+
+    // 1. DRAWER LOGIC
+    const drawer = document.getElementById('mobile-drawer');
+    const overlay = document.getElementById('drawer-overlay');
+    const menuBtn = document.getElementById('mobile-menu-trigger');
+    const closeBtn = document.getElementById('drawer-close');
+    const mobileDropdowns = document.querySelectorAll('#mobile-drawer .dropdown-trigger');
+
+    function toggleDrawer(isOpen) {
+        if (isOpen) {
+            drawer.classList.add('active');
+            overlay.style.opacity = '1';
+            overlay.style.visibility = 'visible';
+            document.body.style.overflow = 'hidden';
+        } else {
+            drawer.classList.remove('active');
+            overlay.style.opacity = '0';
+            overlay.style.visibility = 'hidden';
+            document.body.style.overflow = '';
+        }
+    }
+
+    if(menuBtn) menuBtn.addEventListener('click', () => toggleDrawer(true));
+    if(closeBtn) closeBtn.addEventListener('click', () => toggleDrawer(false));
+    if(overlay) overlay.addEventListener('click', () => toggleDrawer(false));
+
+    // 2. SUBMENU ACCORDIONS
+    mobileDropdowns.forEach(trigger => {
+        trigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetSubmenu = this.parentElement.querySelector('.submenu');
+            const icon = this.querySelector('i');
+
+            if (targetSubmenu.style.display === 'block') {
+                targetSubmenu.style.display = 'none';
+                if(icon) icon.style.transform = 'rotate(0deg)';
+            } else {
+                targetSubmenu.style.display = 'block';
+                if(icon) icon.style.transform = 'rotate(180deg)';
+            }
+        });
+    });
+
+    // 3. TRUST SWIPER
+    if (document.querySelector('.indexTrustSwiper')) {
+        new Swiper('.indexTrustSwiper', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            centeredSlides: true,
+            autoplay: { 
+                delay: 3500,
+                disableOnInteraction: false 
+            },
+            pagination: { 
+                el: '.swiper-pagination-index', 
+                clickable: true 
+            },
+            navigation: { 
+                nextEl: '.swiper-button-next-index', 
+                prevEl: '.swiper-button-prev-index' 
+            },
+            breakpoints: {
+                1024: {
+                    slidesPerView: 1, 
+                }
+            }
+        });
+    }
+  });
+
+  // 4. VIEW ALL CARD LOGIC
+  function appendViewAllCard(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const viewAllHTML = `
+          <div class="flex-shrink-0 w-[45vw] md:w-[200px] flex items-center justify-center snap-center">
+              <a href="catalog.html" class="flex flex-col items-center group no-underline">
+                  <div class="w-14 h-14 rounded-full bg-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all shadow-sm">
+                      <i class="fa-solid fa-arrow-right text-sm"></i>
+                  </div>
+                  <span class="mt-4 font-black uppercase text-[10px] tracking-widest text-zinc-400">View All</span>
+              </a>
+          </div>`;
+      container.insertAdjacentHTML('beforeend', viewAllHTML);
+  }
+  </script>
+</body>
+</html>

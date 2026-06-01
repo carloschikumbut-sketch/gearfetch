@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEARFETCH Admin | Customers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin-style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-sneaker"></i> GEAR<span>FETCH</span>
+            <button class="close-sidebar" onclick="toggleSidebar()">&times;</button>
+        </div>
+        <div class="nav-links">
+            <a href="admin.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i> Analytics</a>
+            <a href="inventory.html" class="nav-item"><i class="fa-solid fa-box"></i> Products</a>
+            <a href="orders.html" class="nav-item"><i class="fa-solid fa-receipt"></i> Orders</a>
+            <a href="customers.html" class="nav-item active"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+            <div class="nav-divider"></div>
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-eye"></i> View Store</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="admin-header">
+            <div class="header-left">
+                <button class="mobile-toggle" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1>Customer Insights</h1>
+            </div>
+            <div class="admin-actions">
+                <button class="btn-primary" onclick="window.print()">Export Data</button>
+            </div>
+        </header>
+
+        <section class="kpi-container">
+            <div class="card kpi-card">
+                <p class="card-label">Total Unique Customers</p>
+                <h2 id="total-customer-count">0</h2>
+            </div>
+            <div class="card kpi-card">
+                <p class="card-label">Top Location</p>
+                <h2 id="top-location">--</h2>
+                <span id="top-location-count" class="trend up" style="background: #ef4444; color: white;">0 Customers</span>
+            </div>
+            <div class="card kpi-card">
+                <p class="card-label">Avg. Revenue Per User</p>
+                <h2 id="avg-ltv">$0.00</h2>
+            </div>
+        </section>
+
+        <div class="card" style="margin-bottom: 25px;">
+            <h3>Customer Reach by City</h3>
+            <div style="height: 250px; position: relative;">
+                <canvas id="customerLocChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="table-container" style="overflow-x: auto;">
+                <table class="order-table" style="width:100%; min-width: 700px; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align: left; border-bottom: 2px solid var(--sf-border);">
+                            <th style="padding: 15px;">Customer</th>
+                            <th style="padding: 15px;">Email</th>
+                            <th style="padding: 15px;">City</th>
+                            <th style="padding: 15px;">Orders</th>
+                            <th style="padding: 15px;">Total Spent</th>
+                            <th style="padding: 15px;">Last Active</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customer-list">
+                        <tr><td colspan="6" style="text-align:center; padding:40px;">Fetching records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+
+    <script>
+        function toggleSidebar() { document.body.classList.toggle('sidebar-open'); }
+
+        let customerChart = null; // Store chart instance
+
+        async function loadCRM() {
+            const listBody = document.getElementById('customer-list');
+            const { data: orders, error } = await window._supabase
+                .from('orders')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) return console.error(error);
+
+            const customers = {};
+            const locationCounts = {};
+            let totalRevenue = 0;
+
+            orders.forEach(order => {
+                const email = order.customer_email || "Guest";
+                const city = order.location ? order.location.split('(')[0].trim() : 'Other';
+                
+                if (!customers[email]) {
+                    customers[email] = {
+                        name: order.customer_name || 'Anonymous',
+                        city: city,
+                        orders: 0,
+                        spent: 0,
+                        last: new Date(order.created_at)
+                    };
+                    locationCounts[city] = (locationCounts[city] || 0) + 1;
+                }
+                customers[email].orders++;
+                customers[email].spent += parseFloat(order.total_price || 0);
+                totalRevenue += parseFloat(order.total_price || 0);
+            });
+
+            // Update KPIs
+            const totalC = Object.keys(customers).length;
+            document.getElementById('total-customer-count').innerText = totalC;
+            
+            if (totalC > 0) {
+                const top = Object.entries(locationCounts).sort((a,b) => b[1] - a[1])[0];
+                document.getElementById('top-location').innerText = top[0];
+                document.getElementById('top-location-count').innerText = `${top[1]} Customers`;
+                document.getElementById('avg-ltv').innerText = `$${(totalRevenue/totalC).toFixed(2)}`;
+                
+                renderGrowthChart(locationCounts); // Call chart render
+            }
+
+            // Render Table
+            listBody.innerHTML = Object.keys(customers).map(email => {
+                const c = customers[email];
+                return `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 15px;"><strong>${c.name}</strong></td>
+                        <td style="padding: 15px;">${email}</td>
+                        <td style="padding: 15px;">${c.city}</td>
+                        <td style="padding: 15px;">${c.orders}</td>
+                        <td style="padding: 15px; font-weight: bold; color: #10b981;">$${c.spent.toFixed(2)}</td>
+                        <td style="padding: 15px;">${c.last.toLocaleDateString()}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderGrowthChart(counts) {
+            const ctx = document.getElementById('customerLocChart').getContext('2d');
+            const labels = Object.keys(counts);
+            const data = Object.values(counts);
+
+            if (customerChart) customerChart.destroy(); // Prevent duplicate charts on reload
+
+            customerChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Customers',
+                        data: data,
+                        backgroundColor: '#ef4444', // SNEAKERLAB Red
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { display: false } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCRM);
+    </script>
+</body>
+</html>

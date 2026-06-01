@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEAR FETCH Admin | Orders & Restock Requests</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #008060;
+            --bg-body: #f6f6f7;
+            --sidebar-bg: #1a1c1d;
+            --text-main: #202223;
+            --text-sub: #6d7175;
+            --white: #ffffff;
+            --border: #e1e3e5;
+            --radius: 8px;
+            --sidebar-width: 260px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body); 
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .sidebar { 
+            width: var(--sidebar-width); 
+            background: var(--sidebar-bg); 
+            color: white; 
+            height: 100vh; 
+            position: fixed; 
+            z-index: 1001;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-weight: 800;
+            font-size: 20px;
+        }
+
+        .sidebar-brand span { color: var(--primary); }
+        .nav-links { display: flex; flex-direction: column; padding: 10px; }
+
+        .nav-item {
+            padding: 16px 20px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+            font-size: 15px;
+        }
+
+        .nav-item:hover { background: #2c2e2f; color: white; }
+        .nav-item.active { background: #2c2e2f; color: white; font-weight: 600; }
+
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0; width: 100%; height: 60px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            align-items: center;
+            padding: 0 16px;
+            gap: 12px;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .main-content { 
+            margin-left: var(--sidebar-width); 
+            width: calc(100% - var(--sidebar-width));
+            padding: 24px; 
+        }
+
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+            gap: 16px; 
+            margin-bottom: 24px; 
+        }
+
+        .stat-card { 
+            background: var(--white); 
+            padding: 20px; 
+            border-radius: var(--radius); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+        }
+
+        .stat-card small { color: var(--text-sub); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card h2 { margin: 8px 0 0 0; font-size: 28px; font-weight: 700; }
+
+        .card { background: var(--white); border-radius: var(--radius); box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 32px; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .search-input {
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            width: 240px;
+            outline: none;
+        }
+
+        .search-input:focus { border-color: var(--primary); }
+
+        .filter-tabs { display: flex; border-bottom: 1px solid var(--border); background: #fafafb; overflow-x: auto; }
+        
+        .tab { 
+            padding: 14px 20px;
+            cursor: pointer;
+            color: var(--text-sub);
+            font-size: 14px;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .tab:hover { color: var(--text-main); }
+        .tab.active { color: var(--primary); border-bottom-color: var(--primary); background: white; font-weight: 600; }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+
+        .order-table { width: 100%; border-collapse: collapse; min-width: 780px; }
+
+        .order-table th { 
+            background: #f8f9fa; 
+            text-align: left; 
+            padding: 12px 16px; 
+            font-size: 11px; 
+            color: var(--text-sub); 
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .order-table td { 
+            padding: 14px 16px; 
+            border-bottom: 1px solid var(--border); 
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        .order-table tr:last-child td { border-bottom: none; }
+        .order-table tbody tr:hover td { background: #fafafa; }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-pending     { background: #fff3cd; color: #856404; }
+        .badge-processing { background: #cce5ff; color: #004085; }
+        .badge-shipped    { background: #d4edda; color: #155724; }
+        .badge-delivered  { background: #c3f0e4; color: #005c3f; }
+        .badge-cancelled  { background: #f8d7da; color: #721c24; }
+        .badge-requested  { background: #e2e8f0; color: #334155; }
+
+        .btn-action {
+            background: none;
+            border: 1px solid var(--border);
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-main);
+            transition: 0.2s;
+            margin-right: 4px;
+        }
+
+        .btn-action:hover { background: #f0f0f0; }
+        .btn-action.danger { color: #d72c0d; border-color: #f8d7da; }
+        .btn-action.danger:hover { background: #fff5f5; }
+
+        .table-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-sub);
+        }
+
+        .table-state i { font-size: 36px; margin-bottom: 12px; display: block; }
+        .table-state p { margin: 0; font-size: 15px; }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 16px;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: white;
+            width: 100%;
+            max-width: 460px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 { margin: 0; font-size: 17px; }
+
+        .modal-close {
+            background: none; border: none;
+            font-size: 22px; cursor: pointer;
+            color: var(--text-sub); line-height: 1;
+            padding: 2px 6px;
+        }
+
+        .modal-close:hover { color: var(--text-main); }
+        .modal-body { padding: 24px; }
+
+        .modal-body label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .modal-select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            outline: none;
+            background: white;
+        }
+
+        .modal-select:focus { border-color: var(--primary); }
+
+        .modal-footer {
+            padding: 16px 24px;
+            background: #f9fafb;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-cancel {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover { background: #006e52; }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Detail modal */
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 9px 0;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-row:last-child { border-bottom: none; }
+        .detail-row .label { color: var(--text-sub); }
+        .detail-row .value { font-weight: 600; text-align: right; max-width: 60%; }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .item-row img { width: 48px; height: 48px; object-fit: contain; background: #f4f4f4; border-radius: 6px; }
+        .item-row .info { flex: 1; }
+        .item-row .info p { margin: 0; font-weight: 600; }
+        .item-row .info small { color: var(--text-sub); font-size: 12px; }
+        .item-row .price { font-weight: 700; }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            background: #1a1c1d;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            max-width: 320px;
+        }
+
+        #toast.show { opacity: 1; transform: translateY(0); }
+        #toast.success { border-left: 4px solid var(--primary); }
+        #toast.error   { border-left: 4px solid #d72c0d; }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--text-sub);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .page-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+
+        .page-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .page-btn:hover:not(:disabled) { background: #f0f0f0; }
+        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-overlay.show { display: block; }
+            .main-content { margin-left: 0; width: 100%; padding-top: 76px; }
+            .mobile-header { display: flex; }
+        }
+
+        @media (max-width: 500px) {
+            .search-input { width: 100%; }
+            .card-header { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<div class="mobile-header">
+    <button onclick="toggleMenu()" style="background:none; border:none; font-size:20px; cursor:pointer;">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    <div style="font-weight:800; font-size:18px;">GEAR<span style="color:var(--primary)">FETCH</span></div>
+</div>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">GEAR<span>FETCH</span></div>
+    <div class="nav-links">
+        <a href="admin.html"     class="nav-item"><i class="fa-solid fa-chart-pie"></i> Analytics</a>
+        <a href="inventory.html" class="nav-item"><i class="fa-solid fa-box"></i> Products</a>
+        <a href="orders.html"    class="nav-item active"><i class="fa-solid fa-receipt"></i> Orders</a>
+        <a href="customers.html" class="nav-item"><i class="fa-solid fa-users"></i> Customers</a>
+        <a href="settings.html"  class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+</nav>
+
+<main class="main-content">
+    <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+        <h1 style="font-size:24px; font-weight:700; margin:0;">Orders Management</h1>
+        <button onclick="exportOrdersToCSV()" style="background:#000; color:#fff; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; font-size:14px; display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-file-export"></i> Export CSV
+        </button>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card"><small>Total Orders</small><h2 id="stat-total">—</h2></div>
+        <div class="stat-card"><small>Fulfilled</small><h2 id="stat-fulfilled" style="color:var(--primary);">—</h2></div>
+        <div class="stat-card"><small>Unfulfilled</small><h2 id="stat-unfulfilled" style="color:#d72c0d;">—</h2></div>
+        <div class="stat-card"><small>Total Revenue</small><h2 id="stat-revenue">—</h2></div>
+    </div>
+
+    <!-- MAIN ORDERS CARD -->
+    <div class="card">
+        <div class="filter-tabs">
+            <div class="tab active" onclick="setFilter('All',this)">All Orders</div>
+            <div class="tab" onclick="setFilter('Pending',this)">Pending</div>
+            <div class="tab" onclick="setFilter('Processing',this)">Processing</div>
+            <div class="tab" onclick="setFilter('Shipped',this)">Shipped</div>
+            <div class="tab" onclick="setFilter('Delivered',this)">Delivered</div>
+            <div class="tab" onclick="setFilter('Cancelled',this)">Cancelled</div>
+        </div>
+
+        <div class="card-header">
+            <span style="font-size:14px; color:var(--text-sub);" id="result-count">Loading orders...</span>
+            <input type="text" class="search-input" placeholder="Search orders..." oninput="handleSearch(this.value)" />
+        </div>
+
+        <div class="table-responsive">
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-tbody">
+                    <tr><td colspan="7">
+                        <div class="table-state">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            <p>Loading orders...</p>
+                        </div>
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <span id="pagination-info"></span>
+            <div class="page-btns" id="page-btns"></div>
+        </div>
+    </div>
+
+    <!-- RESTOCK REQUESTS CARD -->
+    <header style="display:flex; justify-content:space-between; align-items:center; margin:40px 0 24px; flex-wrap:wrap; gap:12px;">
+        <h2 style="font-size:20px; font-weight:700; margin:0;"><i class="fa-solid fa-bell-on text-emerald-600"></i> Size Restock Requests</h2>
+        <span id="restock-badge-count" class="badge badge-pending" style="font-size:13px;">0 Requests Active</span>
+    </header>
+
+    <div class="card">
+        <div class="card-header">
+            <span style="font-size:14px; color:var(--text-sub);" id="restock-result-count">0 items flagged</span>
+            <input type="text" class="search-input" id="restock-search" placeholder="Search name, email, product..." oninput="handleRestockSearch(this.value)" />
+        </div>
+
+        <div class="table-responsive">
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Request Date</th>
+                        <th>Product Context</th>
+                        <th>Requested Size</th>
+                        <th>Customer Email</th>
+                        <th>Status Notification</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="restock-tbody">
+                    <tr><td colspan="6">
+                        <div class="table-state">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            <p>Loading restock metrics pipeline...</p>
+                        </div>
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <span id="restock-pagination-info"></span>
+            <div class="page-btns" id="restock-page-btns"></div>
+        </div>
+    </div>
+</main>
+
+<!-- Status Modal -->
+<div class="modal-overlay" id="status-modal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Update Order Status</h3>
+            <button class="modal-close" onclick="closeStatusModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin:0 0 16px; font-size:13px; color:var(--text-sub);">
+                Order: <strong id="modal-order-id">—</strong>
+            </p>
+            <label>New Status</label>
+            <select id="status-select" class="modal-select">
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeStatusModal()">Cancel</button>
+            <button class="btn-primary" id="update-btn" onclick="handleStatusUpdate()">
+                <i class="fa-solid fa-check"></i> Update Status
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detail-modal">
+    <div class="modal-box" style="max-width:520px;">
+        <div class="modal-header">
+            <h3 id="detail-title">Order Details</h3>
+            <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="detail-body">
+            <div class="table-state"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading...</p></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeDetailModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script>
+function db() {
+    if (!window._supabase) throw new Error('Supabase not ready. Check supabase-config.js');
+    return window._supabase;
+}
+
+// STATE MANAGEMENT
+let allOrders      = [];
+let filteredOrders = [];
+let currentFilter  = 'All';
+let searchQuery    = '';
+let currentPage    = 1;
+let activeOrderId  = null;
+const PAGE_SIZE    = 15;
+
+// RESTOCK PIPELINE SCHEMATICS
+let allRestocks      = [];
+let filteredRestocks = [];
+let restockSearch    = '';
+let currentRestockPage = 1;
+const RESTOCK_PAGE_SIZE = 10;
+
+function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className   = `show ${type}`;
+    clearTimeout(t._t);
+    t._t = setTimeout(() => { t.className = ''; }, 3500);
+}
+
+function toggleMenu() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('show');
+}
+
+// FETCH SYSTEM IMPLEMENTATION
+async function fetchAllAdminData() {
+    await Promise.all([
+        fetchOrders(),
+        fetchRestockRequests()
+    ]);
+}
+
+async function fetchOrders() {
+    try {
+        const { data, error } = await db()
+            .from('orders')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        allOrders = data || [];
+        window.currentOrders = allOrders;
+
+        applyFilterAndSearch();
+        refreshStats();
+    } catch (err) {
+        console.error('fetchOrders:', err);
+        document.getElementById('orders-tbody').innerHTML = `
+            <tr><td colspan="7">
+                <div class="table-state">
+                    <i class="fa-solid fa-triangle-exclamation" style="color:#d72c0d;"></i>
+                    <p>${err.message}</p>
+                </div>
+            </td></tr>`;
+    }
+}
+
+async function fetchRestockRequests() {
+    try {
+        // Pull fields that directly match your database table structure
+        const { data, error } = await db()
+            .from('restock_requests')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        allRestocks = data || [];
+        document.getElementById('restock-badge-count').textContent = `${allRestocks.length} Requests Active`;
+        
+        applyRestockFilterAndSearch();
+    } catch (err) {
+        console.error('fetchRestockRequests:', err);
+        document.getElementById('restock-tbody').innerHTML = `
+            <tr><td colspan="6">
+                <div class="table-state">
+                    <i class="fa-solid fa-triangle-exclamation" style="color:#d72c0d;"></i>
+                    <p>${err.message}</p>
+                </div>
+            </td></tr>`;
+    }
+}
+
+function refreshStats() {
+    document.getElementById('stat-total').textContent = allOrders.length;
+    document.getElementById('stat-fulfilled').textContent = allOrders.filter(o => ['Shipped','Delivered'].includes(o.status)).length;
+    document.getElementById('stat-unfulfilled').textContent = allOrders.filter(o => ['Pending','Processing'].includes(o.status)).length;
+    document.getElementById('stat-revenue').textContent = '$' + allOrders.reduce((s,o) => s + (parseFloat(o.total_price)||0), 0)
+                                                         .toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+
+// SEARCH/FILTER INTERFACES FOR MAIN TABLES
+function setFilter(filter, el) {
+    currentFilter = filter;
+    currentPage   = 1;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    applyFilterAndSearch();
+}
+
+function handleSearch(val) {
+    searchQuery = val.trim().toLowerCase();
+    currentPage = 1;
+    applyFilterAndSearch();
+}
+
+function applyFilterAndSearch() {
+    let r = [...allOrders];
+    if (currentFilter !== 'All')
+        r = r.filter(o => (o.status||'').toLowerCase() === currentFilter.toLowerCase());
+
+    if (searchQuery) {
+        r = r.filter(o =>
+            (o.customer_name  ||'').toLowerCase().includes(searchQuery) ||
+            (o.customer_email ||'').toLowerCase().includes(searchQuery) ||
+            String(o.id).includes(searchQuery)
+        );
+    }
+    filteredOrders = r;
+    renderTable();
+    renderPagination();
+}
+
+function handleRestockSearch(val) {
+    restockSearch = val.trim().toLowerCase();
+    currentRestockPage = 1;
+    applyRestockFilterAndSearch();
+}
+
+function applyRestockFilterAndSearch() {
+    let r = [...allRestocks];
+    if (restockSearch) {
+        r = r.filter(req => 
+            (req.email || '').toLowerCase().includes(restockSearch) ||
+            (req.requested_size || '').toLowerCase().includes(restockSearch) ||
+            (req.product_name || '').toLowerCase().includes(restockSearch) ||
+            String(req.product_id).includes(restockSearch)
+        );
+    }
+    filteredRestocks = r;
+    renderRestockTable();
+    renderRestockPagination();
+}
+
+function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+}
+
+function renderTable() {
+    const tbody = document.getElementById('orders-tbody');
+    const count = document.getElementById('result-count');
+
+    if (!filteredOrders.length) {
+        count.textContent = '0 orders found';
+        tbody.innerHTML = `<tr><td colspan="7"><div class="table-state"><i class="fa-solid fa-inbox"></i><p>No orders found</p></div></td></tr>`;
+        return;
+    }
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const end   = Math.min(start + PAGE_SIZE, filteredOrders.length);
+    const page  = filteredOrders.slice(start, end);
+
+    count.textContent = `Showing ${start+1}–${end} of ${filteredOrders.length} orders`;
+
+    tbody.innerHTML = page.map(o => {
+        const date = o.created_at ? new Date(o.created_at).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}) : '—';
+        const total = o.total_price != null ? '$' + parseFloat(o.total_price).toLocaleString('en-US',{minimumFractionDigits:2}) : '—';
+        const status = o.status || 'Pending';
+
+        return `<tr data-id="${o.id}">
+            <td style="font-weight:600;color:var(--text-sub);font-family:monospace;">#${o.id}</td>
+            <td>${date}</td>
+            <td><strong>${esc(o.customer_name||'—')}</strong></td>
+            <td style="color:var(--text-sub);font-size:13px;">${esc(o.customer_email||'—')}</td>
+            <td style="font-weight:700;">${total}</td>
+            <td><span class="badge badge-${status.toLowerCase()}">${status}</span></td>
+            <td>
+                <button class="btn-action" onclick="openDetailModal(${o.id})" title="View"><i class="fa-solid fa-eye"></i></button>
+                <button class="btn-action" onclick="openStatusModal(${o.id},'${status}')" title="Update Status"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button class="btn-action danger" onclick="deleteOrder(${o.id})" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function renderRestockTable() {
+    const tbody = document.getElementById('restock-tbody');
+    const count = document.getElementById('restock-result-count');
+
+    if (!filteredRestocks.length) {
+        count.textContent = '0 requests active';
+        tbody.innerHTML = `<tr><td colspan="6"><div class="table-state"><i class="fa-solid fa-envelope-open"></i><p>No restock notifications filed</p></div></td></tr>`;
+        return;
+    }
+
+    const start = (currentRestockPage - 1) * RESTOCK_PAGE_SIZE;
+    const end   = Math.min(start + RESTOCK_PAGE_SIZE, filteredRestocks.length);
+    const page  = filteredRestocks.slice(start, end);
+
+    count.textContent = `Showing ${start+1}–${end} of ${filteredRestocks.length} entries`;
+
+    tbody.innerHTML = page.map(req => {
+        // Maps parameters cleanly from 'restock_requests' structure explicitly [image_d44722.png]
+        const dateOfRequest = req.created_at ? new Date(req.created_at).toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'}) : '—';
+        const productId = req.product_id || 'N/A';
+        const productName = req.product_name ? esc(req.product_name) : `<span style="color:var(--text-sub); font-style:italic;">Fetch Item Metadata...</span>`;
+        const requestedSize = req.requested_size || '—';
+        const customerEmail = req.email || '—';
+        const statusNotification = req.status || 'Alert Pending';
+
+        return `<tr>
+            <td>${dateOfRequest}</td>
+            <td>
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                    <span style="font-weight:700; font-size:13px;">${productName}</span>
+                    <span style="font-family:monospace; font-size:11px; color:var(--text-sub);">ID: #${productId}</span>
+                </div>
+            </td>
+            <td><span class="badge badge-requested" style="font-size:13px; font-weight:700; border-radius:4px;">${esc(String(requestedSize))}</span></td>
+            <td style="font-weight:600; font-size:13px; color:var(--text-main);">${esc(customerEmail)}</td>
+            <td><span class="badge badge-pending">${esc(statusNotification)}</span></td>
+            <td>
+                <button class="btn-action" onclick="sendRestockNotification('${esc(customerEmail)}', '${productId}', '${esc(String(requestedSize))}')" title="Notify Customer"><i class="fa-solid fa-paper-plane"></i></button>
+                <button class="btn-action danger" onclick="deleteRestockRequest('${req.id}')" title="Dismiss"><i class="fa-solid fa-xmark"></i></button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+// PAGINATION CONTROLLERS
+function renderPagination() {
+    const total = Math.ceil(filteredOrders.length / PAGE_SIZE);
+    const info  = document.getElementById('pagination-info');
+    const btns  = document.getElementById('page-btns');
+
+    if (total <= 1) { info.textContent = ''; btns.innerHTML = ''; return; }
+    info.textContent = `Page ${currentPage} of ${total}`;
+
+    let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>`;
+    let s = Math.max(1, currentPage - 2);
+    let e = Math.min(total, s + 4);
+    if (e - s < 4) s = Math.max(1, e - 4);
+
+    for (let p = s; p <= e; p++) html += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+    html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===total?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button>`;
+    btns.innerHTML = html;
+}
+
+function goPage(p) {
+    const total = Math.ceil(filteredOrders.length / PAGE_SIZE);
+    if (p < 1 || p > total) return;
+    currentPage = p;
+    renderTable();
+    renderPagination();
+}
+
+function renderRestockPagination() {
+    const total = Math.ceil(filteredRestocks.length / RESTOCK_PAGE_SIZE);
+    const info  = document.getElementById('restock-pagination-info');
+    const btns  = document.getElementById('restock-page-btns');
+
+    if (total <= 1) { info.textContent = ''; btns.innerHTML = ''; return; }
+    info.textContent = `Page ${currentRestockPage} of ${total}`;
+
+    let html = `<button class="page-btn" onclick="goRestockPage(${currentRestockPage-1})" ${currentRestockPage===1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>`;
+    let s = Math.max(1, currentRestockPage - 2);
+    let e = Math.min(total, s + 4);
+    if (e - s < 4) s = Math.max(1, e - 4);
+
+    for (let p = s; p <= e; p++) html += `<button class="page-btn ${p===currentRestockPage?'active':''}" onclick="goRestockPage(${p})">${p}</button>`;
+    html += `<button class="page-btn" onclick="goRestockPage(${currentRestockPage+1})" ${currentRestockPage===total?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button>`;
+    btns.innerHTML = html;
+}
+
+function goRestockPage(p) {
+    const total = Math.ceil(filteredRestocks.length / RESTOCK_PAGE_SIZE);
+    if (p < 1 || p > total) return;
+    currentRestockPage = p;
+    renderRestockTable();
+    renderRestockPagination();
+}
+
+// MODAL CONTROLLERS
+function openStatusModal(id, status) {
+    activeOrderId = Number(String(id).replace('#', '')); 
+    document.getElementById('modal-order-id').textContent = '#' + activeOrderId;
+    document.getElementById('status-select').value = status;
+    document.getElementById('status-modal').classList.add('active');
+}
+
+function closeStatusModal() {
+    document.getElementById('status-modal').classList.remove('active');
+    activeOrderId = null;
+}
+
+async function handleStatusUpdate() {
+    if (!activeOrderId) return;
+    const newStatus = document.getElementById('status-select').value;
+    const btn = document.getElementById('update-btn');
+    const cleanId = Number(String(activeOrderId).replace(/[#\s]/g, ''));
+
+    if (isNaN(cleanId)) { showToast('Invalid Order ID format', 'error'); return; }
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating...';
+
+    try {
+        const { data, error } = await db().from('orders').update({ status: newStatus }).eq('id', cleanId).select();
+        if (error) throw error;
+        if (!data || data.length === 0) throw new Error(`Order ID ${cleanId} not found in database.`);
+
+        const o = allOrders.find(x => Number(String(x.id).replace(/[#\s]/g, '')) === cleanId);
+        if (o) o.status = newStatus;
+        
+        closeStatusModal();
+        applyFilterAndSearch();
+        refreshStats(); 
+        showToast(`Order #${cleanId} updated to ${newStatus}`, 'success');
+    } catch (err) {
+        console.error("Database Error:", err);
+        showToast('Update failed: ' + err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Update Status';
+    }
+}
+
+async function openDetailModal(id) {
+    document.getElementById('detail-title').textContent = 'Order #' + id;
+    document.getElementById('detail-body').innerHTML = `<div class="table-state"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading...</p></div>`;
+    document.getElementById('detail-modal').classList.add('active');
+
+    try {
+        const { data: o, error } = await db().from('orders').select('*').eq('id', id).single();
+        if (error) throw error;
+
+        const date = o.created_at ? new Date(o.created_at).toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'}) : '—';
+        let itemsHtml = '<p style="color:var(--text-sub);font-size:13px;margin-top:8px;">No item details recorded.</p>';
+        
+        if (Array.isArray(o.items) && o.items.length) {
+            itemsHtml = o.items.map(item => `
+                <div class="item-row">
+                    <img src="${esc(item.image||item.image_url||'')}" onerror="this.style.display='none'" />
+                    <div class="info">
+                        <p>${esc(item.name||'Product')}</p>
+                        <small>Size: ${esc(String(item.size||'—'))} &nbsp;·&nbsp; Qty: ${item.quantity||1}</small>
+                    </div>
+                    <span class="price">$${parseFloat(item.price||0).toFixed(2)}</span>
+                </div>`).join('');
+        }
+
+        document.getElementById('detail-body').innerHTML = `
+            <div class="detail-row"><span class="label">Customer</span><span class="value">${esc(o.customer_name||'—')}</span></div>
+            <div class="detail-row"><span class="label">Email</span><span class="value">${esc(o.customer_email||'—')}</span></div>
+            <div class="detail-row"><span class="label">Contact</span><span class="value">${esc(o.customer_contact||'—')}</span></div>
+            <div class="detail-row"><span class="label">Location</span><span class="value">${esc(o.location||'—')}</span></div>
+            <div class="detail-row"><span class="label">Shipping</span><span class="value">${esc(o.shipping_address||'—')}</span></div>
+            <div class="detail-row"><span class="label">Date</span><span class="value">${date}</span></div>
+            <div class="detail-row"><span class="label">Status</span><span class="value"><span class="badge badge-${(o.status||'pending').toLowerCase()}">${o.status||'Pending'}</span></span></div>
+            <div class="detail-row"><span class="label">Total</span><span class="value" style="color:var(--primary);">$${parseFloat(o.total_price||0).toFixed(2)}</span></div>
+            <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
+            <p style="font-weight:700;font-size:12px;text-transform:uppercase;color:var(--text-sub);letter-spacing:.5px;margin:0 0 8px;">Items</p>
+            ${itemsHtml}`;
+    } catch (err) {
+        document.getElementById('detail-body').innerHTML = `<p style="color:#d72c0d;">Error: ${err.message}</p>`;
+    }
+}
+
+function closeDetailModal() { document.getElementById('detail-modal').classList.remove('active'); }
+
+// RESTOCK ACTIONS HANDLERS
+function sendRestockNotification(email, productId, size) {
+    const mailtoUri = `mailto:${email}?subject=Your Requested Size is Back in Stock at GEAR FETCH!&body=Hi there,%0A%0AGreat news! The item (Product ID: #${productId}) you flagged for size ${size} restock monitoring is back on our shelves. Secure yours before it sells out again.%0A%0ABest regards,%0AThe GEAR FETCH Squad`;
+    window.open(mailtoUri, '_blank');
+    showToast(`Notification channel launched for ${email}`, 'success');
+}
+
+async function deleteRestockRequest(id) {
+    if (!confirm(`Dismiss restock alert entry?`)) return;
+    try {
+        const { error } = await db().from('restock_requests').delete().eq('id', id);
+        if (error) throw error;
+
+        allRestocks = allRestocks.filter(r => String(r.id) !== String(id));
+        document.getElementById('restock-badge-count').textContent = `${allRestocks.length} Requests Active`;
+        
+        applyRestockFilterAndSearch();
+        showToast('Restock entry successfully removed', 'success');
+    } catch (err) {
+        showToast(`Dismissal failed: ${err.message}`, 'error');
+    }
+}
+
+async function deleteOrder(id) {
+    if (!confirm(`Permanently delete Order #${id}? This cannot be undone.`)) return;
+    try {
+        const { error } = await db().from('orders').delete().eq('id', id);
+        if (error) throw error;
+
+        allOrders = allOrders.filter(o => o.id !== id);
+        window.currentOrders = allOrders;
+
+        applyFilterAndSearch();
+        refreshStats();
+        showToast(`Order #${id} deleted`, 'success');
+    } catch (err) {
+        showToast('Delete failed: ' + err.message, 'error');
+    }
+}
+
+function exportOrdersToCSV() {
+    if (!filteredOrders.length) { showToast('No orders to export', 'error'); return; }
+    const headers = ['Order ID','Date','Customer','Email','Contact','Location','Shipping Address','Total','Status'];
+    const rows = filteredOrders.map(o => [
+        o.id,
+        o.created_at ? new Date(o.created_at).toLocaleDateString() : '',
+        o.customer_name    || '',
+        o.customer_email   || '',
+        o.customer_contact || '',
+        o.location         || '',
+        o.shipping_address || '',
+        o.total_price      || '',
+        o.status           || ''
+    ]);
+
+    const csv = [headers,...rows].map(r => r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `gearfetch_orders_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast(`Exported ${filteredOrders.length} orders`, 'success');
+}
+
+// REALTIME PIPELINE SYNC OVERLAYS
+function subscribeRealtime() {
+    try {
+        db().channel('orders-rt')
+            .on('postgres_changes', { event:'*', schema:'public', table:'orders' }, ({ eventType, new:nr, old:or }) => {
+                if      (eventType === 'INSERT') allOrders.unshift(nr);
+                else if (eventType === 'UPDATE') { const i = allOrders.findIndex(o=>o.id===nr.id); if(i>-1) allOrders[i]=nr; }
+                else if (eventType === 'DELETE') allOrders = allOrders.filter(o=>o.id!==or.id);
+
+                window.currentOrders = allOrders;
+                applyFilterAndSearch();
+                refreshStats();
+                if (eventType === 'INSERT') showToast('New order received!', 'success');
+            })
+            .subscribe();
+
+        db().channel('restocks-rt')
+            .on('postgres_changes', { event:'*', schema:'public', table:'restock_requests' }, ({ eventType, new:nr, old:or }) => {
+                if      (eventType === 'INSERT') allRestocks.unshift(nr);
+                else if (eventType === 'UPDATE') { const i = allRestocks.findIndex(r=>r.id===nr.id); if(i>-1) allRestocks[i]=nr; }
+                else if (eventType === 'DELETE') allRestocks = allRestocks.filter(r=>r.id!==or.id);
+
+                document.getElementById('restock-badge-count').textContent = `${allRestocks.length} Requests Active`;
+                applyRestockFilterAndSearch();
+                if (eventType === 'INSERT') showToast('New size restock request filed by a customer!', 'success');
+            })
+            .subscribe();
+    } catch(e) { console.warn('Realtime Pipeline Warning:', e); }
+}
+
+// APPLICATION INITIALIZATION
+document.addEventListener('DOMContentLoaded', async () => {
+    let tries = 0;
+    while (!window._supabase && tries++ < 30)
+        await new Promise(r => setTimeout(r, 100));
+
+    if (!window._supabase) {
+        showToast('Database connection missing.', 'error');
+        return;
+    }
+
+    await fetchAllAdminData();
+    subscribeRealtime();
+});
+</script>
+</body>
+</html>
