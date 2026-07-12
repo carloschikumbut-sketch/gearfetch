@@ -274,15 +274,7 @@
             }).join('');
         }
 
-        async function loadSavedAddress(userId) {
-            const { data } = await client.from('profiles').select('city, address, phone').eq('id', userId).single();
-            if (data) {
-                document.getElementById('address-status').innerText = `${data.city || 'Configured'}`;
-                document.getElementById('ship-street').value = data.address || '';
-                document.getElementById('ship-city').value = data.city || '';
-                document.getElementById('ship-phone').value = data.phone || '';
-            }
-        }
+      
 
         document.getElementById('address-form').addEventListener('submit', async (e) => {
             e.preventDefault();
