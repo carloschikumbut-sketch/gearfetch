@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Shipping & Returns | GEAR FETCH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+        body { font-family: 'Inter', sans-serif; background-color: #ffffff; color: #000000; line-height: 1.6; margin: 0; padding: 0; }
+
+        /* Navigation Anchor (Pinned Top-Left) */
+        .nav-anchor {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px 16px;
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Typography */
+        .shipping-header, .returns-header { font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase; }
+
+        /* Layout - Adjusted padding to allow content to start at top */
+        .page-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 80px 24px; 
+        }
+
+        .info-section h3 { font-size: 11px; font-weight: 900; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+        .info-section h3::before { content: ""; width: 30px; height: 2px; background: #000; }
+
+        /* Shipping Tier Rows */
+        .tier-row { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #f0f0f0; }
+        .tier-name { font-weight: 700; font-size: 14px; text-transform: uppercase; }
+        .tier-time { font-size: 12px; color: #71717a; margin-top: 2px; }
+        .tier-price { font-weight: 700; font-size: 14px; }
+
+        /* Step Indicator */
+        .step-number { font-size: 10px; font-weight: 900; background: #000; color: #fff; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin-bottom: 16px; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-up { animation: fadeInUp 0.6s ease forwards; }
+
+        @media (max-width: 768px) {
+            .page-wrapper { padding: 80px 20px; }
+            .nav-anchor { top: 10px; left: 10px; }
+            .shipping-header, .returns-header { font-size: 3.5rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-anchor shadow-sm">
+        <a href="index.html" class="text-[10px] font-black uppercase tracking-widest text-black flex items-center">
+            <i class="fa-solid fa-arrow-left mr-2"></i> Back to Shopping
+        </a>
+    </nav>
+
+    <main class="page-wrapper">
+        <div class="animate-up">
+            <header class="mb-20">
+                <h1 class="shipping-header text-6xl md:text-8xl leading-[0.9]">Shipping Logistics</h1>
+                <p class="mt-8 text-zinc-500 max-w-lg text-sm font-medium">
+                    From Us to your destination. We provide secure, authenticated delivery for every single order. Delivering nationwide, our goal is to offer you the best delivery options, no matter where you live. Every day, we deliver to our customers across Zimbabwe, ensuring that we provide the very highest levels of responsiveness to you at all times.
+                </p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-20 mb-32">
+                <div class="info-section">
+                    <h3>Rates & Timelines</h3>
+                    <p> The time frame for order delivery is divided into two parts - Processing Time & Shipping Time:</p>
+                    <div class="space-y-2">
+                        <div class="tier-row">
+                            <div>
+                                <p class="tier-name">Processing Time </p>
+                                <p class="tier-time">As soon as order is confirmed, please allow a few hours for your order to be processed and be ready to be delivered. This includes Order verification, tailoring, quality check and packaging. </p>
+                            </div>
+                        </div>
+                        <div class="tier-row">
+                            <div>
+                                <p class="tier-name">Delivery Time</p>
+                                <p class="tier-time">After processing and leaving our warehouse, you will be notified when your orders are off for delivery. Orders usually take a few hours in Harare and out of Harare you will be notified about the pickup time at selected pickup points. You will also be able to check order status after you create an account and you login on the Gear Fetch Store.</p>
+                            </div>
+                        </div>
+                        <div class="tier-row border-none">
+                            <div>
+                                <p class="tier-name text-red-600">Complimentary Shipping</p>
+                                <p class="tier-time">Orders over $150.00</p>
+                            </div>
+                            <span class="tier-price">FREE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h3>Security & Tracking</h3>
+                    <div class="space-y-10">
+                        <div>
+                            <p class="text-xs font-black uppercase mb-3 tracking-wider">Authentication Check</p>
+                            <p class="text-zinc-500 text-sm leading-relaxed">
+                                Every item undergoes a multi-point verification process. Our specialists will verify and clear your items for dispatch.
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-black uppercase mb-3 tracking-wider">Live Tracking</p>
+                            <p class="text-zinc-500 text-sm leading-relaxed">
+                                A tracking link is generated the moment your order is confirmed. You will receive realtime updates on the order status in your profile once you login or create a member account on this platform.
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-black uppercase mb-3 tracking-wider">Secure Delivery</p>
+                            <p class="text-zinc-500 text-sm leading-relaxed">
+                                Due to the high value of our inventory, all packages require a physical signature upon delivery. We do not drop-off at unstaffed locations.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <header class="mb-20 pt-20 border-t border-zinc-100">
+                <p class="text-red-600 font-black uppercase tracking-[0.3em] text-[10px] mb-3">Policy & Satisfaction</p>
+                <h1 class="returns-header text-5xl md:text-7xl leading-[0.9] tracking-tighter">
+                    Returns & <br> Exchanges
+                </h1>
+                <p class="text-zinc-500 text-sm mt-6 max-w-lg font-medium">
+                    We stand behind our collection. If your product isn't perfect, we've designed a straightforward process to get it right.
+                </p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+                <div class="space-y-12">
+                    <div>
+                        <h4 class="text-[11px] font-black uppercase tracking-[0.2em] text-black mb-6 flex items-center gap-3">
+                            <span class="w-8 h-[2px] bg-red-600"></span> The Guarantee
+                        </h4>
+                        <div class="prose-style space-y-6">
+                            <p class="text-sm text-zinc-600">
+                                You have <span class="text-black font-bold">3 days</span> from the date of delivery to initiate a return or exchange. 
+                            </p>
+                            <p class="text-sm text-zinc-600">
+                                All items must be returned in <span class="text-black font-bold">Deadstock Condition</span>—unworn, with original packaging fully intact.
+                            </p>
+                           
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-10">
+                    <h4 class="text-[11px] font-black uppercase tracking-[0.2em] text-black mb-8">How to Return</h4>
+                    
+                    <div class="flex gap-6">
+                        <div class="flex-shrink-0"><span class="step-number">01</span></div>
+                        <div>
+                            <p class="font-bold text-xs uppercase mb-2 tracking-wide">Initiate Request</p>
+                            <p class="text-zinc-500 text-sm">Contact our support team with your order number and reason for return.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-6">
+                        <div class="flex-shrink-0"><span class="step-number">02</span></div>
+                        <div>
+                            <p class="font-bold text-xs uppercase mb-2 tracking-wide">Verification</p>
+                            <p class="text-zinc-500 text-sm">Wait for a return authorization. We usually respond within 24 hours.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-6">
+                        <div class="flex-shrink-0"><span class="step-number">03</span></div>
+                        <div>
+                            <p class="font-bold text-xs uppercase mb-2 tracking-wide">Secure Shipping</p>
+                            <p class="text-zinc-500 text-sm">Pack the product securely in a double-box to protect the original box. Once you are ready to ship your return, address your package to shipping address which will be provided by our support team.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-6">
+                        <div class="flex-shrink-0"><span class="step-number">04</span></div>
+                        <div>
+                            <p class="font-bold text-xs uppercase mb-2 tracking-wide">Return Shipping Method</p>
+                            <p class="text-zinc-500 text-sm leading-relaxed">
+                               Use a trackable and insured shipping method to return your package, with your order number clearly printed on your shipping label.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-6">
+                        <div class="flex-shrink-0"><span class="step-number">05</span></div>
+                        <div>
+                            <p class="font-bold text-xs uppercase mb-2 tracking-wide">Refund Processing</p>
+                            <p class="text-zinc-500 text-sm leading-relaxed">
+                                Once your return is authenticated, please allow <span class="text-black font-bold">24-72 hours</span> for your bank to credit the refund back to your original payment method.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-6">
+                        <div class="flex-shrink-0"><span class="step-number">06</span></div>
+                        <div>
+                            <p class="font-bold text-xs uppercase mb-2 tracking-wide">Final Notification</p>
+                            <p class="text-zinc-500 text-sm">
+                                You will receive a final confirmation email once the transaction is completed on our end.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 p-6 bg-zinc-50 border border-zinc-200 rounded-sm">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-3">Important Notice</p>
+                        <p class="text-[11px] text-zinc-600 leading-relaxed italic">
+                            Gear Fetch is not responsible for any return shipping fees, or for returns that are lost or stolen while in transit. We strongly recommend using a trackable and insured shipping method with a signature requirement.
+                        </p>
+                    </div>
+
+                    <div class="mt-12">
+                        <a href="contact.html" class="inline-block bg-black text-white px-10 py-5 text-[11px] font-black uppercase tracking-widest hover:bg-red-600 transition-all w-full text-center">
+                            Start a Return
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="mt-24 pt-12 border-t border-zinc-100 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-zinc-400 text-[10px] font-bold uppercase tracking-widest">Questions about your order?</p>
+                <a href="contact.html" class="bg-black text-white px-8 py-4 text-[11px] font-black uppercase tracking-widest hover:bg-red-600 transition-all">Contact Support</a>
+            </footer>
+        </div>
+    </main>
+
+</body>
+</html>

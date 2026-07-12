@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Secure Checkout | GEAR FETCH</title>
+    
+    <!-- Robots set to noindex to protect user transaction privacy -->
+    <meta name="robots" content="noindex, nofollow"> 
+    <link rel="icon" type="image/png" href="assets/faviconlogo1.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/env.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Updated Schema to reflect gearfetch.shop -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://gearfetch.shop/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Cart",
+        "item": "https://gearfetch.shop/cart.html"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Checkout",
+        "item": "https://gearfetch.shop/checkout.html"
+      }]
+    }
+    </script>
+<body>
+    <div class="header-spacer"></div> <!-- REQUIRED: Pushes content down -->
+    <header class="checkout-header-slim">
+    <div class="header-container-slim">
+        <div class="header-left-slim">
+   <a href="javascript:history.back()" class="back-link">
+    <i class="fa-solid fa-chevron-left"></i>
+</a>
+</div>
+        
+        <div class="header-center-slim">
+        
+            <h1 class="brand-logo">GEAR<span>FETCH</span></h1>
+            
+            <div class="security-pill-header">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>SECURE SSL ENCRYPTED CHECKOUT</span>
+            </div>
+        </div>
+
+        <div class="header-right-slim"></div>
+    </div>
+</header>
+   <style>
+    /* --- 1. THEME & RESET --- */
+    :root {
+        --accent: #ff4d4d;
+        --black: #1a1a1a;
+        --white: #ffffff;
+        --gray: #f4f4f4;
+        --border: #e5e7eb;
+        --secure-green: #16a34a;
+        --secure-bg: #f0fdf4;
+        --secure-border: #dcfce7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body { 
+        background: var(--gray); 
+        font-family: 'Inter', sans-serif; 
+        margin: 0; 
+        padding: 0;
+        display: flex; 
+        flex-direction: column; 
+        min-height: 100vh; 
+    }
+
+    /* --- 2. HEADER: Fixed & Stable --- */
+    .header-spacer { height: 5px; } /* Prevents content from hiding behind fixed header */
+    
+    .checkout-header-slim {
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        padding: 15px 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header-container-slim {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+    }
+
+    .header-center-slim {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .brand-logo { font-size: 1.4rem; font-weight: 900; margin: 0; }
+    .brand-logo span { color: var(--accent); }
+
+    .security-pill-header {
+        background: var(--secure-bg);
+        border: 1px solid var(--secure-border);
+        color: var(--secure-green);
+        padding: 3px 10px;
+        border-radius: 50px;
+        font-size: 0.5rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* --- 3. MAIN CONTENT: Centered Grid --- */
+    .main-content { 
+    width: 95%;
+    max-width: 1100px;
+    margin: 5px auto 40px auto; /* Reduced the top margin (first value) from 20px to 5px */
+    display: grid; 
+    grid-template-columns: 1fr 380px; 
+    gap: 30px; 
+    flex: 1;
+}
+   
+
+    @media (max-width: 900px) { 
+        .main-content { grid-template-columns: 1fr; }
+    }
+
+    /* --- 4. CARDS & UI COMPONENTS --- */
+    .card { 
+        background: var(--white); 
+        padding: 25px; 
+        border-radius: 16px; 
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
+        margin-bottom: 24px; 
+    }
+
+    h2 { font-size: 0.9rem; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+
+    /* Dispatch Timer */
+    .dispatch-timer { background: #fff5f5; border: 1px solid #ffe3e3; padding: 10px 15px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+    #countdown-clock { color: var(--accent); font-family: monospace; }
+
+    /* Payments */
+    .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+    .pay-option { border: 1.5px solid var(--border); border-radius: 10px; padding: 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .pay-option.active { border-color: var(--black); background: #f9fafb; }
+    .pay-option span { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
+
+    /* Forms */
+    .input-group { margin-bottom: 15px; }
+    label { font-size: 0.7rem; font-weight: 700; color: #666; text-transform: uppercase; margin-bottom: 6px; }
+    input, select { width: 100%; padding: 12px; border: 1.5px solid var(--border); border-radius: 10px; }
+    
+    .confirm-btn { 
+        width: 100%; padding: 18px; background: var(--black); color: white; border: none; 
+        border-radius: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; margin-top: 20px; 
+    }
+
+    /* Promo & Summary */
+    .promo-section { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 20px 0; }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; }
+    .total-row { border-top: 2px solid var(--gray); padding-top: 15px; margin-top: 15px; font-weight: 900; font-size: 1.2rem; }
+
+    /* Footer */
+    .trust-footer { background: var(--white); padding: 20px 20px; border-top: 1px solid var(--border); text-align: center; margin-top: auto; }
+    .payment-badges-slim { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+    .payment-badges-slim img { height: 18px; opacity: 0.6; }
+
+    .back-link {
+    text-decoration: none;
+    color: var(--black);
+    font-size: 1.2rem; /* Make the icon slightly larger */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* Gives the icon a comfortable clicking area */
+    height: 40px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.back-link:hover {
+    background: var(--gray);
+}
+
+.header-left-slim { 
+    display: flex; 
+    justify-content: flex-start; 
+    align-items: center;
+}
+
+
+/* Customizing Select2 to match your Gear Fetch theme */
+.select2-container--default .select2-selection--single {
+    height: 48px !important; /* Matches your input height */
+    padding: 10px !important;
+    border: 1.5px solid #e5e7eb !important; /* Your theme border */
+    border-radius: 10px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 24px !important;
+    font-size: 0.9rem !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 46px !important;
+}
+
+
+
+/* Styling for the manual entry trigger */
+.manual-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 5px 0;
+}
+
+.manual-action-btn:hover {
+    background: var(--accent);
+    color: white;
+}
+
+/* Add this to your <style> block */
+.manual-suburb-trigger {
+    position: relative;
+    z-index: 9999;
+    pointer-events: auto; /* Ensures it is always clickable */
+}
+
+
+/* Promo Section Styles */
+.promo-section {
+    background: #fafafa;
+    border: 1px dashed var(--border);
+    padding: 20px;
+}
+
+.promo-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--black);
+}
+
+.promo-input-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.promo-input-wrapper input {
+    flex: 1;
+    margin: 0;
+    padding: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.promo-apply-btn {
+    padding: 12px 20px;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.promo-apply-btn:hover {
+    background: var(--accent);
+}
+
+/* Success/Error message colors */
+.msg-success { color: var(--secure-green); }
+.msg-error { color: var(--accent); }
+
+
+.order-container {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 400px;
+            background-color: #f9f9f9;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Updated button styles */
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap; /* Forces text to stay on one line */
+            transition: background-color 0.3s;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+        }
+
+        .whatsapp-btn i {
+            font-size: 20px;
+        }
+
+
+
+
+
+        .trust-footer {
+    padding: 20px 15px;
+    text-align: center;
+    background-color: #f9f9f9; /* Subtle grey background differentiates from main content */
+    border-top: 1px solid #eaeaea;
+}
+
+.trust-note {
+    font-size: 0.8rem;           /* Smaller, professional scale */
+    color: #777;                 /* Soft grey instead of harsh black */
+    line-height: 1.4;            /* Tighter line spacing */
+    margin: 0 auto;
+    max-width: 400px;            /* Keeps text from spanning the whole width */
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.02rem;     /* Slightly wider spacing for elegance */
+}
+
+.trust-note strong {
+    color: #444;                 /* Keeps 'WhatsApp' slightly darker for emphasis */
+    font-weight: 600;
+}
+</style>
+
+ <div class="main-content">
+    <div class="checkout-left">
+        <div class="card">
+            <h2><i class="fa-solid fa-truck"></i> Delivery Information</h2>
+            <div class="input-group">
+                <label>Full Name (First & Last Name)</label>
+                <input type="text" placeholder="" id="checkout-name">
+            </div>
+             <div class="input-group">
+                <label>Delivery City / Town</label>
+                <select id="delivery-city" onchange="handleCityChange()">
+    <option value="" data-fee="0">Select City or Town...</option>
+    <option value="Harare" data-fee="5">Harare</option>
+    <option value="Bulawayo" data-fee="6">Bulawayo</option>
+    <option value="Chitungwiza" data-fee="5">Chitungwiza</option>
+    <option value="Mutare" data-fee="6">Mutare</option>
+    <option value="Gweru" data-fee="6">Gweru</option>
+    <option value="Masvingo" data-fee="6">Masvingo</option>
+    
+    <option value="Beitbridge" data-fee="8">Beitbridge</option>
+    <option value="Bindura" data-fee="6">Bindura</option>
+    <option value="Chegutu" data-fee="6">Chegutu</option>
+    <option value="Chinhoyi" data-fee="6">Chinhoyi</option>
+    <option value="Chiredzi" data-fee="8">Chiredzi</option>
+    
+    <option value="Gokwe" data-fee="7">Gokwe</option>
+    <option value="Gwanda" data-fee="8">Gwanda</option>
+    <option value="Hwange" data-fee="8">Hwange</option>
+    <option value="Kadoma" data-fee="6">Kadoma</option>
+    <option value="Kariba" data-fee="8">Kariba</option>
+    <option value="Karoi" data-fee="6">Karoi</option>
+    <option value="Kwekwe" data-fee="6">Kwekwe</option>
+    <option value="Marondera" data-fee="6">Marondera</option>
+    <option value="Mazowe" data-fee="6">Mazowe</option>
+    <option value="Norton" data-fee="5">Norton</option>
+    <option value="Plumtree" data-fee="9">Plumtree</option>
+    <option value="Rusape" data-fee="6">Rusape</option>
+    <option value="Shurugwi" data-fee="6">Shurugwi</option>
+    <option value="Victoria Falls" data-fee="9">Victoria Falls</option>
+    <option value="Zvishavane" data-fee="6">Zvishavane</option>
+    <option value="Chipinge" data-fee="7">Chipinge</option>
+    
+    <option value="other">Other / City Not Listed</option>
+</select>
+            </div>
+             <div id="area-selection-container" class="input-group" style="display:none;">
+                <label id="area-label" class="text-red-600">Select Area</label>
+                <select id="specific-area" class="border-2 border-black"></select>
+            </div>
+            <!-- This div ONLY appears if they clicked "Add Manually" -->
+<!-- Change 'manual-city-input' to 'manual-city-entry-box' -->
+<div id="manual-city-entry-box" class="input-group" style="display:none;">
+    <label>Please Enter Your City/Town Name</label>
+    <input type="text" id="manual-city-text" placeholder="Type your city here...">
+</div>
+
+<div id="manual-suburb-entry-box" class="input-group" style="display:none;">
+    <label>Please Enter Suburb Name</label>
+    <input type="text" id="manual-suburb-text" placeholder="Type suburb here...">
+</div>
+
+
+            <div class="input-group">
+                <label>Full Delivery Address</label>
+                <input type="text" placeholder="House No, Street Name, Suburb" id="checkout-address">
+            </div>
+
+<div class="input-group">
+    <label>Phone Number</label>
+    <div style="position: relative; display: flex; align-items: center;">
+        <input type="tel" placeholder="+263 7..." id="checkout-phone" style="padding-right: 40px;">
+        <i class="fa-regular fa-circle-question" 
+   style="position: absolute; right: 12px; color: #a0a0a0; cursor: pointer; font-size: 1rem; transition: color 0.2s;" 
+   onmouseover="this.style.color='var(--accent)'" 
+   onmouseout="this.style.color='#a0a0a0'"
+   onclick="showPrivacyPopup()">
+</i>
+    </div>
+</div>
+
+<div id="privacy-popup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index:9999; justify-content:center; align-items:center; transition: all 0.3s ease;">
+    <div style="background:white; padding:30px 25px; border-radius:20px; width:85%; max-width:320px; text-align:center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popupFade 0.3s ease;">
+        <div style="font-size: 2rem; color: var(--accent); margin-bottom: 15px;">
+           
+        </div>
+        
+        <h3 style="margin: 0 0 15px 0; font-family: 'Inter', sans-serif; font-weight: 700; color: #1a1a1a;">Why we need your number?</h3>
+        
+        <p style="font-size: 0.95rem; line-height: 1.5; color: #666; margin-bottom: 25px; font-family: 'Inter', sans-serif;">
+            We need your number to contact you if needed during delivery. Your information is 100% secure and will never be shared with anyone.
+        </p>
+        
+        <button onclick="document.getElementById('privacy-popup').style.display='none'" 
+                style="width: 100%; padding: 12px; background: var(--black); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-family: 'Inter', sans-serif; transition: background 0.2s;">
+            Close
+        </button>
+    </div>
+</div>
+
+<style>
+    @keyframes popupFade {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+</style>
+
+
+             
+    
+          <div class="input-group">
+    <label for="checkout-email">Email Address <span style="font-weight: 400; color: #999;">(Optional)</span></label>
+    <input type="email" placeholder="email@example.com" id="checkout-email">
+
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: nowrap;">
+        <input type="checkbox" id="optin" style="width: 18px; height: 18px; cursor: pointer; flex-shrink: 0;">
+        <label for="optin" style="font-size: 0.8rem; text-transform: none; font-weight: 500; cursor: pointer; margin: 0; white-space: normal; line-height: 1.2;">
+            Opt in to receive news, offers, and discount codes
+        </label>
+    </div>
+</div>
+         </div>   
+           
+           
+
+        <div class="card">
+            <h2><i class="fa-solid fa-credit-card"></i> Payment Method</h2>
+            <div class="payment-grid">
+    <!-- EcoCash Option -->
+    <div class="pay-option active" onclick="setPayment('ecocash', this)">
+        <!-- Replace the URL below with the one from your Supabase bucket -->
+        <img src="https://bbzdwxrljjdabynquqvm.supabase.co/storage/v1/object/public/sneaker-images/products/ecocash.png" 
+             alt="EcoCash" 
+             style="max-width: 50px; height: auto; display: block; margin: 0 auto;">
+        <span>ECOCASH</span>
+    </div>
+
+    <!-- Innbucks Option -->
+    <div class="pay-option" onclick="setPayment('innbucks', this)">
+        <!-- Replace the URL below with the one from your Supabase bucket -->
+        <img src="https://bbzdwxrljjdabynquqvm.supabase.co/storage/v1/object/public/sneaker-images/products/innbucks.png" 
+             alt="Innbucks" 
+             style="max-width: 50px; height: auto; display: block; margin: 0 auto;">
+        <span>INNBUCKS</span>
+    </div>
+                <div class="pay-option" onclick="setPayment('bank_transfer', this)">
+                    <i class="fa-solid fa-building-columns"></i>
+                    <span>Bank Transfer</span>
+                </div>
+                <div class="pay-option" onclick="setPayment('cod', this)">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                    <span>Cash (USD)</span>
+                </div>
+            </div>
+            <div id="payment-details-box" class="mt-4 pt-4 border-t border-dashed" style="display: block;">
+                <label id="payment-input-label" class="text-[9px] font-black uppercase text-gray-500">EcoCash Number for Payment</label>
+                <input type="tel" id="payment-number" placeholder="07..." class="w-full border-2 border-black p-3 text-sm rounded-none mt-1 outline-none">
+            </div>
+        </div>
+
+       
+
+     
+    <div class="promo-section card">
+    <label class="promo-label">Have a Discount Code?</label>
+    <div class="promo-input-wrapper">
+        <input type="text" id="promo-input" placeholder="ENTER CODE" maxlength="15">
+        <button onclick="applyPromo()" class="promo-apply-btn">Apply</button>
+    </div>
+    <p id="promo-message" style="margin-top: 10px; font-size: 0.75rem; font-weight: 700;"></p>
+</div>
+
+    <div class="checkout-right">
+        <div class="card">
+            <h2>Order Summary</h2>
+            <div id="checkout-items-list"></div>
+            <div class="summary-row" style="margin-top:20px;">
+                <span>Subtotal</span>
+                <span id="check-subtotal">$0.00</span>
+            </div>
+            <div class="summary-row" id="check-discount-row" style="display:none; color:var(--accent); font-weight:700;">
+                <span>Discount</span>
+                <span id="check-discount">-$0.00</span>
+            </div> 
+            <div class="summary-row">
+                <span>Flat Delivery Fee</span>
+                <span id="check-delivery">$0.00</span>
+            </div>
+            <div class="summary-row total-row">
+                <span>Total</span>
+                <span id="check-total">$0.00</span>
+            </div>
+            
+            <button class="whatsapp-btn" onclick="processOrder()">
+    <i class="fa-brands fa-whatsapp"></i> Place order via WhatsApp
+</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<footer class="trust-footer">
+    <p class="trust-note">
+        Orders are processed manually via <strong>WhatsApp</strong> for size verification.<br>
+        Your data is always protected and never shared.
+    </p>
+    <div class="payment-badges-slim">
+        <img src="https://bbzdwxrljjdabynquqvm.supabase.co/storage/v1/object/public/sneaker-images/products/ecocash.png" alt="EcoCash">
+        <img src="https://bbzdwxrljjdabynquqvm.supabase.co/storage/v1/object/public/sneaker-images/products/innbucks.png" alt="Innbucks">
+        <img src="https://bbzdwxrljjdabynquqvm.supabase.co/storage/v1/object/public/sneaker-images/products/visa.png" alt="Visa">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard">
+        <img src="https://bbzdwxrljjdabynquqvm.supabase.co/storage/v1/object/public/sneaker-images/products/zimswitch.png" alt="Zimswitch">
+    </div>
+  <p class="copyright" style="font-size: 0.7rem; color: #999;">&copy; 2026 GEAR FETCH. SECURE & VERIFIED.</p>
+</footer>
+ 
+<script>
+    // --- GLOBAL VARIABLES ---
+    let selectedPayment = 'ecocash';
+    let currentDiscountValue = 0; 
+    const PROMO_CODES = { 
+        "WELCOME10": 1.00,
+        "SNEAKER20": 0.20,
+        "HARARE5": 5.00,
+         "CHIKUMBU": 50.00,
+        "MHATA" : 10.00
+    
+        
+    };
+
+    const locationData = {
+     "Harare": [
+        "Alexandra Park", "Amby", "Arcadia", "Ardbennie", "Arlington", "Ashdown Park", 
+        "Aspindale Park", "Avenues", "Avondale", "Avondale West", "Avonlea", "Belgravia", 
+        "Belvedere", "Beverley", "Bloomingdale", "Bloomvale", "Bluff Hill", "Borrowdale", 
+        "Borrowdale Brooke", "Borrowdale West", "Braeside", "Budiriro", "CBD / Town", 
+        "Chadcombe", "Chisipite", "Churu", "Colne Valley", "Cotswold Hills", "Cranborne", 
+        "Crystal Creek", "Daly Estate", "Domboshava", "Donnybrook", "Dzivarasekwa", 
+        "Eastlea", "Emerald Hill", "Epworth", "Fidelity Life Park", "Glaudina", 
+        "Glen Lorne", "Glen Norah", "Glen View", "Good Hope", "Graniteside", "Grange", 
+        "Greencroft", "Greendale", "Greystone Park", "Hatcliffe", "Hatcliffe North", 
+        "Hatfield", "Helensvale", "Highfield", "Highlands", "Houghton Park", "Hunters Creek", 
+        "Induna Park", "Kambuzuma", "Kuwadzana", "Kuwadzana Extension", "Logan Park", 
+        "Mabelreign", "Mabvuku", "Madokero Estates", "Mainway Meadows", "Mandara", 
+        "Maranatha", "Marlborough", "Marlborough Sunset", "Mbare", "Meyrick Park", 
+        "Milton Park", "Mount Pleasant", "Mount Pleasant Heights", "Mt Pleasant Park", 
+        "Msasa", "Msasa Park", "Mufakose", "New Marlborough", "Nkwisi Park", "Northwood", 
+        "Nyanga Views", "Parktown", "Pinnacle Estates", "Pomona", "Prospect", 
+        "Quinnington", "Rhodesville", "Ridgeview", "Rolf Valley", "Rugare", "Ruwa", 
+        "Sentosa", "Shawasha Hills", "Southerton", "Southlea Park", "Southview Park", 
+        "St Martins", "Sunningdale", "Sunridge", "Tafara", "Tynwald", "Tynwald South", 
+        "Umwinsidale", "Vainona", "Warren Park", "Waterfalls", "West Hills", "Westgate", 
+        "Whiteworth Park", "Willowvale", "Workington"
+    ], 
+   "Chitungwiza": [
+    "Chitungwiza Town Centre", "Manyame Park", "Makoni", "Sekuru Tichafa", 
+    "St Marys", "Unit A", "Unit B", "Unit C", "Unit D", "Unit E", "Unit F", 
+    "Unit G", "Unit H", "Unit J", "Unit K", "Unit L", "Unit M", "Unit N", 
+    "Unit O", "Zengeza 1", "Zengeza 2", "Zengeza 3", "Zengeza 4", "Zengeza 5"
+],
+        "Bulawayo": ["City Centre Pickup", "Ascot Shopping Centre", "Haddon & Sly Hub"],
+        "Mutare": ["Main Post Office", "Sakubva Main Bus Terminus", "Murambi Point"],
+        "Gweru": ["CBD Collection Point", "Mkoba 6 Hub", "Midlands State University Area"],
+        "Masvingo": ["Exor Service Station", "Mucheke Bus Terminus", "City Centre Point"],
+        "Victoria Falls": ["OK Supermarket Entrance", "Sawanga Mall Point"],
+        "Kwekwe": ["Kwekwe CBD", "Mbizo 4 Shopping Centre"],
+        "Beitbridge": ["Border Post Collection", "Total Service Station"],
+        "Marondera": ["Marondera Town Centre", "Oak Street Hub"],
+        "Bindura": ["Bindura Town Centre", "Chipadze Hub"],
+        "Chinhoyi": ["Chinhoyi CBD", "Magunje Bus Stop"],
+        "Kadoma": ["Kadoma CBD", "Rimuka Point"],
+        "Rusape": ["Rusape CBD Point", "Vengere Hub"],
+        "Zvishavane": ["Pote Supermarket Point", "Zvishavane CBD"],
+        "Hwange": ["Hwange Colliery Hub", "Lukhosi Point"]
+    };
+
+    // --- INITIALIZATION ---
+    window.onload = () => { 
+        initCheckout(); 
+        startCountdown(); 
+    };
+
+    function startCountdown() {
+        setInterval(function() {
+            const now = new Date();
+            const eventTime = new Date();
+            eventTime.setHours(16, 0, 0); 
+            if (now > eventTime) eventTime.setDate(eventTime.getDate() + 1);
+            const diff = eventTime - now;
+            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((diff / (1000 * 60)) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            const el = document.getElementById('countdown-clock');
+            if (el) el.innerText = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }, 1000);
+    }
+// --- CART & UI LOGIC ---
+function initCheckout() {
+    const cart = JSON.parse(localStorage.getItem('sneaker-lab-cart')) || [];
+    const list = document.getElementById('checkout-items-list');
+    if (!list) return;
+
+    // Helper function to convert UK sizes to US and EU
+    const getConvertedSizes = (ukSize) => {
+        const uk = parseFloat(ukSize);
+        const us = uk + 1; // Adjust formula if needed
+        const eu =(uk + 33.5); // Adjust formula if needed
+        return `UK ${uk} / US ${us} / EU ${eu}`;
+    };
+
+    list.innerHTML = cart.map((item, index) => {
+        let price = typeof item.price === 'string' ? parseFloat(item.price.replace(/[$,]/g, '')) : item.price;
+        
+        // This generates the static "pill" display instead of a dropdown
+        return `
+        <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+            <div class="summary-row" style="font-weight:700; display:flex; justify-content:space-between;">
+                <span>${item.quantity || 1}x ${item.name}</span>
+                <span>$${(price * (item.quantity || 1)).toFixed(2)}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                <label style="font-size:0.6rem; font-weight:900; color:#999; text-transform:uppercase;">Size:</label>
+                <span style="background: #f3f4f6; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: #374151;">
+                    ${getConvertedSizes(item.size)}
+                </span>
+            </div>
+        </div>`;
+    }).join('');
+    
+    calculateFinalTotals();
+}
+
+    function updateItemSize(index, newSize) {
+        let cart = JSON.parse(localStorage.getItem('sneaker-lab-cart')) || [];
+        cart[index].size = newSize;
+        localStorage.setItem('sneaker-lab-cart', JSON.stringify(cart));
+        initCheckout();
+    }
+
+    // --- CALCULATION LOGIC ---
+ function calculateFinalTotals() {
+    const cart = JSON.parse(localStorage.getItem('sneaker-lab-cart')) || [];
+    const citySelect = document.getElementById('delivery-city');
+    const deliveryDisplay = document.getElementById('check-delivery');
+    if (!citySelect || !deliveryDisplay) return;
+
+    // 1. Calculate Subtotal & Quantity
+    let subtotal = 0, totalQty = 0;
+    cart.forEach(item => {
+        let p = typeof item.price === 'string' ? parseFloat(item.price.replace(/[$,]/g, '')) : item.price;
+        subtotal += p * (item.quantity || 1);
+        totalQty += (item.quantity || 1);
+    });
+
+    // 2. Initial Delivery Fee from dropdown
+    let deliveryFee = parseFloat(citySelect.options[citySelect.selectedIndex].getAttribute('data-fee') || 0);
+
+    // 3. FREE SHIPPING LOGIC ($150+)
+    // We override the deliveryFee if the subtotal hits the threshold
+    if (subtotal >= 150) {
+        deliveryFee = 0;
+        deliveryDisplay.innerText = "QUALIFIED FOR FREE SHIPPING";
+        deliveryDisplay.style.color = "var(--secure-green)";
+        deliveryDisplay.style.fontWeight = "800";
+    } else {
+        deliveryDisplay.innerText = `$${deliveryFee.toFixed(2)}`;
+        deliveryDisplay.style.color = "inherit"; // Reset to default if below 150
+        deliveryDisplay.style.fontWeight = "normal";
+    }
+
+    // 4. Calculate Discounts
+    const qtyDiscRate = totalQty >= 4 ? 0.02 : (totalQty >= 2 ? 0.02 : 0);
+    let totalDiscount = subtotal * qtyDiscRate;
+
+    if (currentDiscountValue > 0) {
+        if (currentDiscountValue < 1) {
+            totalDiscount += (subtotal * currentDiscountValue);
+        } else {
+            totalDiscount += currentDiscountValue;
+        }
+    }
+
+    // 5. Calculate Final Total
+    const finalTotal = subtotal - totalDiscount + deliveryFee;
+
+    // 6. Update UI Elements
+    document.getElementById('check-subtotal').innerText = `$${subtotal.toFixed(2)}`;
+    
+    const discRow = document.getElementById('check-discount-row');
+    if (totalDiscount > 0) {
+        discRow.style.display = 'flex';
+        document.getElementById('check-discount').innerText = `-$${totalDiscount.toFixed(2)}`;
+    } else {
+        discRow.style.display = 'none';
+    }
+
+    document.getElementById('check-total').innerText = `$${finalTotal.toFixed(2)}`;
+}
+
+    // --- PROMO CODE LOGIC ---
+    function applyPromo() {
+        const input = document.getElementById('promo-input');
+        const msg = document.getElementById('promo-message');
+        const code = input.value.toUpperCase().trim();
+        if (!code) return;
+
+        if (PROMO_CODES[code]) {
+            currentDiscountValue = PROMO_CODES[code];
+            msg.innerText = `SUCCESS: ${code} APPLIED!`;
+            msg.className = "msg-success";
+            input.disabled = true;
+            input.style.opacity = "0.5";
+        } else {
+            currentDiscountValue = 0;
+            msg.innerText = "INVALID OR EXPIRED CODE";
+            msg.className = "msg-error";
+        }
+        calculateFinalTotals();
+    }
+
+    function handleCityChange() {
+    const citySelect = document.getElementById('delivery-city');
+    const areaContainer = document.getElementById('area-selection-container');
+    const manualContainer = document.getElementById('manual-city-entry-box');
+    const areaSelect = document.getElementById('specific-area');
+    const areaLabel = document.getElementById('area-label');
+    const selectedCity = citySelect ? citySelect.value : "";
+
+    // Define cities that are PICKUP ONLY (No manual suburb entry allowed)
+    const pickupCities = ["Bulawayo", "Mutare", "Gweru", "Masvingo", "Victoria Falls", "Beitbridge", "Hwange", "Plumtree", "Kariba", "Zvishavane", "Chipinge", "Gwanda", "Gokwe", "Karoi"];
+    const isPickupOnly = pickupCities.includes(selectedCity);
+
+    if ($('#specific-area').hasClass("select2-hidden-accessible")) {
+        $('#specific-area').select2('destroy');
+    }
+
+    areaContainer.style.display = 'none';
+    manualContainer.style.display = 'none';
+    if (!selectedCity) return;
+
+    if (selectedCity === "other") {
+        manualContainer.style.display = 'block';
+    } else {
+        areaContainer.style.display = 'block';
+        areaSelect.innerHTML = '<option value="">Select Area...</option>';
+
+        const points = (typeof locationData !== 'undefined' && locationData[selectedCity]) ? locationData[selectedCity] : ["Main Center"];
+        points.forEach(p => areaSelect.innerHTML += `<option value="${p}">${p}</option>`);
+
+        // ONLY add the "Other" option if it's NOT a pickup-only city
+        if (!isPickupOnly) {
+            areaSelect.innerHTML += `<option value="other">Other / Suburb Not Listed</option>`;
+        }
+
+        // Update Label
+        if (selectedCity === "Harare" || selectedCity === "Chitungwiza") {
+            areaLabel.innerHTML = `<i class="fa-solid fa-house-chimney"></i> Select Delivery Suburb`;
+        } else {
+            areaLabel.innerHTML = `<i class="fa-solid fa-truck-pickup"></i> Select Pickup Point in ${selectedCity}`;
+        }
+
+        // Re-initialize Select2
+        $('#specific-area').select2({
+            placeholder: isPickupOnly ? "Select Pickup Point..." : "Select Suburb...",
+            width: '100%',
+            minimumResultsForSearch: Infinity,
+           
+            escapeMarkup: function(markup) { return markup; },
+            templateResult: function(data) {
+                // Only show manual button if it's NOT a pickup-only city
+                if (data.id === 'other' && !isPickupOnly) {
+                    return $('<div class="manual-action-btn" style="width: 100%; justify-content: center;" onclick="showManualSuburbField()">' + 
+                             '<i class="fa-solid fa-plus"></i> Add Suburb Manually</div>');
+                }
+                return data.text;
+            },
+            templateSelection: function(data) {
+                if (data.id === 'other') {
+                    return 'Please enter suburb name below...';
+                }
+                return data.text;
+            }
+        });
+    }
+    if (typeof calculateFinalTotals === 'function') calculateFinalTotals();
+}
+    // --- PAYMENT HANDLING ---
+    function setPayment(method, element) {
+        document.querySelectorAll('.pay-option').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+        selectedPayment = method;
+
+        const detailsBox = document.getElementById('payment-details-box');
+        const inputLabel = document.getElementById('payment-input-label');
+        const paymentInput = document.getElementById('payment-number');
+
+        if (!detailsBox || !paymentInput) return;
+
+        const noInputMethods = ['cod', 'bank_transfer'];
+        if (noInputMethods.includes(method)) {
+            detailsBox.style.display = 'none';
+            paymentInput.value = ''; 
+        } else {
+            detailsBox.style.display = 'block';
+            inputLabel.innerText = (method === 'ecocash') ? "EcoCash Number (Used to Pay)" : "InnBucks Registered Number";
+            paymentInput.placeholder = "07...";
+        }
+    }
+
+    function toggleSocials(e) {
+        e.preventDefault();
+        const dd = document.getElementById('social-dropdown');
+        dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    }
+
+   // --- ORDER PROCESSING (FIXED & BRANDED) ---
+async function processOrder() {
+    const btn = document.querySelector('.whatsapp-btn');
+    
+    // Check for Supabase connection
+    if (typeof window._supabase === 'undefined') {
+        alert("System Error: Database connection not ready. Please refresh the page.");
+        return;
+    }
+
+    // Capture Form Data
+    const name = document.getElementById('checkout-name').value.trim();
+    const phone = document.getElementById('checkout-phone')?.value.trim() || 'N/A';
+    const city = document.getElementById('delivery-city').value;
+    const manualCity = document.getElementById('manual-city-text').value.trim(); // Grab manual input
+    const manualSuburb = document.getElementById('manual-suburb-text').value.trim();
+    const area = document.getElementById('specific-area')?.value || 'N/A';
+    const address = document.getElementById('checkout-address').value.trim();
+    const email = document.getElementById('checkout-email')?.value.trim() || 'N/A';
+    const optin = document.getElementById('optin')?.checked ? "Subscribed" : "No";
+    
+    // Determine the Final Location String
+    let finalLocation = '';
+    
+    if (city === 'other') {
+        finalLocation = manualCity ? manualCity : 'Manual Entry (No City Provided)';
+    } else {
+        // IMPROVED LOGIC: Check if suburb is manual
+        if (area === 'other') {
+            finalLocation = `${city} (${manualSuburb ? manualSuburb : 'Manual Entry'})`;
+        } else {
+            finalLocation = `${city} (${area})`;
+        }
+    }
+  
+
+    // Payment Logic
+    const currentPayment = typeof selectedPayment !== 'undefined' ? selectedPayment : 'Not Selected';
+    const paymentInput = document.getElementById('payment-number');
+    const paymentDetail = paymentInput ? paymentInput.value.trim() : '';
+
+    // Validation
+    if (!name || !city || !address || (city === 'other' && !manualCity)) { 
+        alert("Please complete your Name, City, and Address!"); 
+        return; 
+    }
+
+    btn.innerText = "SAVING ORDER...";
+    btn.disabled = true;
+
+    try {
+        const cart = JSON.parse(localStorage.getItem('sneaker-lab-cart')) || [];
+        const totalRaw = document.getElementById('check-total').innerText;
+        const numericTotal = parseFloat(totalRaw.replace(/[$,]/g, ''));
+
+        // Prepare Database Object
+        const orderData = {
+            customer_name: name,
+            customer_email: email,
+            customer_contact: phone,
+            location: finalLocation, // Now uses the correct logic
+            shipping_address: address,
+            total_price: numericTotal,
+            items: cart,
+            status: 'Pending',
+            created_at: new Date().toISOString()
+        };
+
+        // Insert to Supabase
+        const { data, error } = await window._supabase
+            .from('orders')
+            .insert([orderData])
+            .select();
+
+        if (error) throw error;
+
+        const orderId = data[0].id;
+
+        // Build the message string
+        let message = `*NEW ORDER #${orderId} - GEARFETCH*\n`;
+        message += `*Customer:* ${name}\n`;
+        message += `*Location:* ${finalLocation}\n`; // Now uses the correct logic
+        message += `*Address:* ${address}\n`;
+        message += `*Contact:* ${phone}\n`;
+        message += `*Email:* ${email}\n`;
+        message += `*Opt-in for updates:* ${optin}\n`;
+        message += `*Payment:* ${currentPayment.toUpperCase()}${paymentDetail ? ' (' + paymentDetail + ')' : ''}\n\n`;
+
+        message += `*ITEMS:*\n`;
+        cart.forEach(i => { 
+            const sizeInfo = i.size ? ` (Size: ${i.size})` : '';
+            message += `- ${i.quantity || 1}x ${i.name}${sizeInfo}\n`; 
+        });
+
+        message += `\n*TOTAL:* ${totalRaw}`;
+
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/263786429446?text=${encodedMessage}`, '_blank');
+ 
+        localStorage.removeItem('sneaker-lab-cart');
+        
+        alert("Order placed successfully! Redirecting to home...");
+        window.location.href = 'index.html';
+
+    } catch (err) {
+        console.error("Order Error:", err.message);
+        alert("Order failed: " + err.message);
+        btn.innerText = "RETRY ORDER";
+        btn.disabled = false;
+    }
+}
+
+async function orderViaSocial(platform) {
+    const name = document.getElementById('checkout-name').value;
+    const total = document.getElementById('check-total').innerText;
+    const city = document.getElementById('delivery-city').value;
+    
+    if (!name || !city) { 
+        alert("Please fill in your Name and City first!"); 
+        return; 
+    }
+
+    const summary = `GEARFETCH ORDER\nCustomer: ${name}\nCity: ${city}\nTotal: ${total}\nItems: (Cart details saved in system)`;
+
+    try {
+        // Modern Clipboard API
+        await navigator.clipboard.writeText(summary);
+        alert("Order Summary Copied! ✓\n\nNow just PASTE it into the " + platform + " message.");
+    } catch (err) {
+        console.error('Clipboard failed', err);
+        alert("Copy failed. Please take a screenshot of your total instead.");
+    }
+
+    setTimeout(() => {
+        if (platform === 'instagram') {
+            window.open(`https://www.instagram.com/direct/inbox/`, '_blank');
+        } else if (platform === 'messenger') {
+            // Replace 'GEARFETCH' with your actual Facebook Page username or ID
+            window.open(`https://m.me/GEARFETCH`, '_blank');
+        }
+    }, 800);
+}
+
+
+$('#delivery-city').select2({
+    placeholder: "Select City or Town...",
+    allowClear: false,
+    width: '100%',
+    minimumResultsForSearch: 0,
+    
+  language: {
+        inputTooShort: function() { return "Please enter more characters"; },
+        noResults: function() {
+            return '<div class="manual-action-btn" onmousedown="showManualCityField(event)">' + 
+                   '<i class="fa-solid fa-plus"></i> Add City Manually</div>';
+        },
+        searching: function() {
+            return "Searching for your city...";
+        }
+    },
+    
+    escapeMarkup: function(markup) { return markup; },
+
+   
+   
+    templateResult: function(data) {
+    if (data.id === 'other') {
+        return $('<div class="manual-action-btn" style="width: 100%; justify-content: center;">' + 
+                 '<i class="fa-solid fa-plus"></i> Add City Manually</div>');
+    }
+    return data.text;
+},
+templateSelection: function(data) {
+        // This controls the text shown in the box AFTER the user selects it
+        if (data.id === 'other') {
+            return ' Enter your city manually below...'; // <--- CHANGE THIS TO YOUR PREFERRED TEXT
+        }
+        return data.text;
+    }
+
+});
+
+// This runs whenever a Select2 dropdown is opened
+// This listener now checks the ID of the dropdown being opened
+$(document).on('select2:open', (e) => {
+    const targetId = e.target.id;
+    const searchField = document.querySelector('.select2-search__field');
+    
+    if (searchField) {
+        if (targetId === 'delivery-city') {
+            searchField.setAttribute('placeholder', 'Type city to search...');
+        } else if (targetId === 'specific-area') {
+            searchField.setAttribute('placeholder', 'Type suburb to search...');
+        }
+    }
+});
+
+// This is now globally accessible
+function showManualCityField(event) {
+    // 1. Stop the event from causing dropdown weirdness
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    // 2. Explicitly close the Select2 dropdown
+    $('#delivery-city').select2('close');
+
+    // 3. Use a small timeout to allow Select2 to finish its closing animation
+    // This prevents the dropdown from "stealing" the focus or hiding the element again
+    setTimeout(() => {
+        // 4. Force the select value to 'other'
+        $('#delivery-city').val('other').trigger('change');
+
+        // 5. Show the manual container
+        const manualContainer = document.getElementById('manual-city-entry-box');
+        if (manualContainer) {
+            manualContainer.style.display = 'block';
+        }
+
+        // 6. Hide the area selection container if it was showing
+        const areaContainer = document.getElementById('area-selection-container');
+        if (areaContainer) {
+            areaContainer.style.display = 'none';
+        }
+    }, 100); 
+}
+
+
+function showPrivacyPopup() {
+    const popup = document.getElementById('privacy-popup');
+    if (popup) {
+        popup.style.display = 'flex';
+    }
+}
+
+
+// This listener catches the click even if the button is created dynamically
+$(document).on('click', '.manual-suburb-trigger', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // 1. Close the dropdown
+    $('#specific-area').select2('close');
+    
+    // 2. Show the manual input box
+    const manualSuburbBox = document.getElementById('manual-suburb-entry-box');
+    if (manualSuburbBox) {
+        manualSuburbBox.style.display = 'block';
+    }
+    
+    // 3. Set the select value to 'other' so the form logic knows they chose manual
+    $('#specific-area').val('other').trigger('change');
+    
+    console.log("Manual suburb trigger clicked!");
+});
+
+
+
+// 2. The Cloned Manual Trigger Function
+// Make sure this is in your global scope
+window.showManualSuburbField = function(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    // 1. Close Select2
+    $('#specific-area').select2('close');
+
+    // 2. Show the box
+    setTimeout(() => {
+        const manualSuburbContainer = document.getElementById('manual-suburb-entry-box');
+        if (manualSuburbContainer) {
+            manualSuburbContainer.style.display = 'block';
+        }
+        
+        // Force the value to 'other'
+        $('#specific-area').val('other').trigger('change');
+    }, 100);
+};
+
+$('#specific-area').on('select2:select', function (e) {
+    const data = e.params.data;
+    const manualBox = document.getElementById('manual-suburb-entry-box');
+    
+    // Check if the ID is 'other' (the value you set in your HTML)
+    if (data.id === 'other') {
+        manualBox.style.display = 'block';
+    } else {
+        manualBox.style.display = 'none';
+    }
+});
+</script>

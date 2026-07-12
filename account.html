@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Register | GEAR FETCH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/png" href="assets/faviconlogo1.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            letter-spacing: -0.01em;
+            background-color: #000000; /* Black Theme Base */
+        }
+        
+        /* High-End Modal */
+        .auth-modal {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(220, 38, 38, 0.15); /* Subtle Red Glow */
+            overflow: hidden;
+            width: 100%;
+            max-width: 420px; 
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Tab Underline */
+        .tab-underline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background-color: #dc2626; /* Brand Red */
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Input Styling */
+        .input-group {
+            position: relative;
+            background-color: #f8f8f8;
+            border: 1px solid #eeeeee;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .input-group:focus-within {
+            border-color: #000000;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 1px #000000;
+        }
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .auth-input {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #000;
+        }
+        .auth-input:focus { outline: none; }
+        .auth-input::placeholder { color: #cbd5e1; }
+
+        /* Eye Icon */
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* Slide Animation */
+        .form-container {
+            display: flex;
+            width: 200%;
+            transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+        .form-panel {
+            width: 100%;
+            padding: 2.5rem 2rem;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 640px) {
+            .auth-modal {
+                max-width: 100%;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            body { background-color: white; }
+        }
+
+        .tab-active { color: #dc2626 !important; }
+
+        /* Loading Overlay */
+        #loading-gate {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+
+/* 1. Change the Body background to white */
+    body { 
+        font-family: 'Inter', sans-serif; 
+        letter-spacing: -0.01em;
+        background-color: #ffffff; /* Change this from #000000 to #ffffff */
+    }
+    
+    /* 2. Optional: Keep the modal clean on large screens */
+    .auth-modal {
+        background-color: white;
+        border-radius: 12px;
+        /* Add a subtle border to distinguish it from the white body background */
+        border: 1px solid #f0f0f0; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        width: 100%;
+        max-width: 420px;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 3. Mobile Optimization: Keep your existing code */
+    @media (max-width: 640px) {
+        .auth-modal {
+            max-width: 100%;
+            border-radius: 0;
+            min-height: 100vh;
+        }
+        body { background-color: white; }
+    }
+
+
+
+
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center sm:p-6 bg-white">
+
+    <div id="loading-gate">
+        <div class="animate-pulse flex flex-col items-center">
+            <h1 class="text-white text-2xl font-black italic tracking-tighter uppercase">GEAR<span class="text-red-600">FETCH</span></h1>
+            <div class="mt-4 w-12 h-[2px] bg-red-600"></div>
+        </div>
+    </div>
+
+    <div class="auth-modal">
+        <div class="pt-8 pb-2 text-center">
+            <h1 class="text-2xl font-black italic tracking-tighter uppercase">GEAR<span class="text-red-600">FETCH</span></h1>
+            <p class="text-[9px] font-bold text-zinc-400 uppercase tracking-[0.3em] mt-1"></p>
+        </div>
+
+        <div class="relative flex border-b border-zinc-100 mt-4">
+            <button id="tab-signin" onclick="switchForm('signin')" class="flex-1 py-5 text-[11px] font-black uppercase tracking-widest tab-active transition-colors">Sign In</button>
+            <button id="tab-signup" onclick="switchForm('signup')" class="flex-1 py-5 text-[11px] font-black uppercase tracking-widest text-zinc-400 transition-colors">Register</button>
+            <div id="tab-indicator" class="tab-underline w-1/2"></div>
+        </div>
+
+        <div id="form-slider" class="form-container">
+            <div class="form-panel space-y-6">
+                <div class="space-y-4">
+                    <div class="input-group">
+                        <i class="fa-solid fa-envelope input-icon"></i>
+                        <input type="email" id="login-email" placeholder="Email Address" class="auth-input">
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="login-password" placeholder="Password" class="auth-input">
+                        <i id="eye-login" onclick="togglePass('login-password', 'eye-login')" class="fa-solid fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+
+               <div class="flex justify-between items-center px-1">
+    <label class="flex items-center space-x-2 cursor-pointer">
+        <input type="checkbox" checked class="accent-red-600 w-3 h-3">
+        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-tighter">Remember me</span>
+    </label>
+    
+    <a href="forgot-password.html" class="text-[10px] font-bold text-red-600 uppercase tracking-tighter hover:underline">
+        Forgot?
+    </a>
+</div>
+<!-- The Link -->
+<p class="text-[10px] text-zinc-400 text-center leading-relaxed px-4">
+    By joining, you agree to our 
+    <a href="returns.html" class="text-black font-bold underline hover:opacity-70 transition-opacity">
+        Terms of Service
+    </a>.
+</p>
+
+
+                <button onclick="handleLogin()" id="btn-login" class="w-full bg-black text-white py-4 rounded-lg text-[11px] font-black uppercase tracking-[0.2em] hover:bg-zinc-800 transition-all shadow-xl shadow-black/10">
+                    Sign In
+                </button>
+
+                <div class="relative flex py-4 items-center">
+                    <div class="flex-grow border-t border-zinc-100"></div>
+                    <span class="flex-shrink mx-4 text-[9px] font-bold text-zinc-300 uppercase tracking-widest">OR</span>
+                    <div class="flex-grow border-t border-zinc-100"></div>
+                </div>
+<button onclick="signInWithGoogle()" class="w-full flex items-center justify-center gap-3 py-3.5 border border-zinc-200 rounded-lg hover:border-black hover:bg-zinc-50 transition-all duration-200 group">
+    <svg viewBox="0 0 24 24" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+    </svg>
+
+    <span class="text-[10px] font-800 uppercase tracking-[0.2em] text-zinc-600 group-hover:text-black">
+        Continue with Google
+    </span>
+</button>
+            </div>
+
+            <div class="form-panel space-y-6">
+                <div class="space-y-4">
+                    <div class="input-group">
+                        <i class="fa-solid fa-user input-icon"></i>
+                        <input type="text" id="reg-name" placeholder="Full Name" class="auth-input">
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-envelope input-icon"></i>
+                        <input type="email" id="reg-email" placeholder="Email Address" class="auth-input">
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="reg-password" placeholder="Create Password" class="auth-input">
+                        <i id="eye-reg" onclick="togglePass('reg-password', 'eye-reg')" class="fa-solid fa-eye-slash toggle-password"></i>
+                    </div>
+                </div>
+                
+                <p class="text-[10px] text-zinc-400 text-center leading-relaxed px-4">
+    By joining, you agree to our 
+    <a href="returns.html" class="text-black font-bold underline hover:opacity-70 transition-opacity">
+        Terms of Service
+    </a>.
+</p>
+                
+                <button onclick="handleRegister()" id="btn-reg" class="w-full bg-red-600 text-white py-4 rounded-lg text-[11px] font-black uppercase tracking-[0.2em] hover:bg-red-700 transition-all shadow-xl shadow-red-600/20">
+                    Create Account
+                </button>
+
+<div class="relative flex py-4 items-center">
+                    <div class="flex-grow border-t border-zinc-100"></div>
+                    <span class="flex-shrink mx-4 text-[9px] font-bold text-zinc-300 uppercase tracking-widest">OR create an account with Google</span>
+                    <div class="flex-grow border-t border-zinc-100"></div>
+                </div>
+<button onclick="signInWithGoogle()" class="w-full flex items-center justify-center gap-3 py-3.5 border border-zinc-200 rounded-lg hover:border-black hover:bg-zinc-50 transition-all duration-200 group">
+    <svg viewBox="0 0 24 24" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+    </svg>
+
+    <span class="text-[10px] font-800 uppercase tracking-[0.2em] text-zinc-600 group-hover:text-black">
+        Continue with Google
+    </span>
+</button>
+
+            </div>
+        </div>
+    </div>
+
+     
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/env.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script>
+        const client = window._supabase;
+        const slider = document.getElementById('form-slider');
+        const indicator = document.getElementById('tab-indicator');
+        const loader = document.getElementById('loading-gate');
+
+
+        const sanitize = (str) => str.replace(/<[^>]*>?/gm, '');
+
+        // Check Session Immediately on load
+        async function checkSession() {
+            const { data: { session } } = await client.auth.getSession();
+            
+            if (session) {
+                // User is already logged in, skip the form
+                window.location.href = 'profile.html';
+            } else {
+                // No session, hide loader and show login
+                loader.style.display = 'none';
+            }
+        }
+
+        function switchForm(type) {
+            const isSignIn = type === 'signin';
+            const signinTab = document.getElementById('tab-signin');
+            const signupTab = document.getElementById('tab-signup');
+
+            if (isSignIn) {
+                slider.style.transform = "translateX(0%)";
+                indicator.style.left = "0%";
+                signinTab.classList.add('tab-active');
+                signupTab.classList.remove('tab-active');
+            } else {
+                slider.style.transform = "translateX(-50%)";
+                indicator.style.left = "50%";
+                signupTab.classList.add('tab-active');
+                signinTab.classList.remove('tab-active');
+            }
+        }
+
+        function togglePass(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye toggle-password';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye-slash toggle-password';
+            }
+        }
+
+        async function handleLogin() {
+            const btn = document.getElementById('btn-login');
+            const email = sanitize(document.getElementById('login-email').value.trim());
+            const password = document.getElementById('login-password').value;
+
+            
+            if (!email || password.length < 8) {
+            alert("Please enter a valid email and a password of at least 8 characters.");
+            return;
+           }
+
+            btn.disabled = true;
+            btn.innerText = "AUTHENTICATING...";
+            
+            try {
+                const { error } = await client.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                window.location.href = 'profile.html';
+            } catch (err) {
+                alert("Login Failed: " + err.message);
+                btn.innerText = "SIGN IN";
+                btn.disabled = false;
+            }
+        }
+
+        async function handleRegister() {
+            const btn = document.getElementById('btn-reg');
+            const name = sanitize(document.getElementById('reg-name').value.trim());
+            const email = sanitize(document.getElementById('reg-email').value.trim());
+            const password = document.getElementById('reg-password').value;
+
+            // Robust validation
+            if(password.length < 8) {
+                alert("Password must be at least 8 characters long.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "SECURING ACCOUNT...";
+            
+            try {
+                const { error } = await client.auth.signUp({
+                    email, 
+                    password, 
+                    options: { data: { full_name: name } }
+                });
+                if (error) throw error;
+                alert("Registration successful! Please verify your email.");
+                switchForm('signin');
+            } catch (err) {
+                alert("Registration Error: " + err.message);
+            } finally {
+                btn.innerText = "CREATE ACCOUNT";
+                btn.disabled = false;
+            }
+        }
+
+
+async function signInWithGoogle() {
+    const { data, error } = await client.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            // Change this to your actual profile page
+            redirectTo: 'https://gearfetch.shop/profile.html' 
+        }
+    });
+
+    if (error) {
+        console.error("Auth Error:", error.message);
+        alert("Login failed: " + error.message);
+    }
+}
+
+
+
+
+        // Initialize session check
+        document.addEventListener('DOMContentLoaded', checkSession);
+    </script>
+</body>
+</html>

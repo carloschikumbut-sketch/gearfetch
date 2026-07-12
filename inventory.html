@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEAR FETCH Admin | Products</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ef4444;
+            --primary-dark: #dc2626;
+            --success: #008060;
+            --bg: #f6f6f7;
+            --card: #ffffff;
+            --text-main: #1a1c1d;
+            --text-sub: #6d7175;
+            --border: #dde0e2;
+            --radius: 8px;
+            --sidebar-width: 240px;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--bg); 
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* ─────────────────────────────────────────────
+            LAYOUT & MOBILE NAVIGATION
+        ───────────────────────────────────────────── */
+        .mobile-header {
+            display: none;
+            padding: 15px 20px;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #1a1c1d;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar-brand { font-size: 22px; font-weight: 900; margin-bottom: 40px; }
+        .sidebar-brand span { color: var(--primary); }
+
+        .nav-item {
+            display: flex; align-items: center; padding: 12px 15px;
+            color: #a1a1a1; text-decoration: none; border-radius: var(--radius);
+            margin-bottom: 5px; transition: 0.2s;
+        }
+        .nav-item i { margin-right: 12px; width: 20px; text-align: center; }
+        .nav-item.active { background: #333; color: #fff; }
+
+        .main-content { 
+            margin-left: var(--sidebar-width); 
+            padding: 30px; 
+            max-width: 1200px;
+        }
+
+        /* ─────────────────────────────────────────────
+            FORMS & CARDS
+        ───────────────────────────────────────────── */
+        .card { background: #fff; border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .form-section { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: var(--text-main); }
+        
+        input, textarea, select {
+            width: 100%; padding: 12px; border: 1px solid var(--border);
+            border-radius: var(--radius); font-size: 16px; box-sizing: border-box;
+        }
+
+        .media-upload {
+            border: 2px dashed var(--success); padding: 30px;
+            text-align: center; border-radius: var(--radius); cursor: pointer; color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .variant-table { width: 100%; border-collapse: collapse; }
+        .v-size, .v-stock { border: none !important; border-bottom: 2px solid #f1f1f1 !important; font-weight: 700; border-radius: 0 !important; }
+        .v-size:focus, .v-stock:focus { border-bottom-color: var(--primary) !important; outline: none; }
+
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .btn-primary { background: var(--primary); color: #fff; border: none; padding: 12px 25px; border-radius: 6px; font-weight: 700; cursor: pointer; }
+        .btn-secondary { background: #f4f4f4; border: 1px solid var(--border); padding: 10px 15px; border-radius: 6px; cursor: pointer; }
+
+        /* ─────────────────────────────────────────────
+            INVENTORY LIST (RESPONSIVE)
+        ───────────────────────────────────────────── */
+        .inventory-container {
+            background: var(--card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .inventory-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .inventory-table th {
+            text-align: left;
+            padding: 15px 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            background: #fafafa;
+        }
+
+        .inventory-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f1f1f1;
+            vertical-align: middle;
+        }
+
+        #inventory-list-body img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 15px; }
+            .mobile-header { display: flex; }
+            .form-section { grid-template-columns: 1fr; }
+            
+            .sidebar-overlay {
+                display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.5); z-index: 999;
+            }
+            .sidebar-overlay.active { display: block; }
+        }
+
+        @media (max-width: 768px) {
+            .inventory-table thead { display: none; } 
+            #inventory-list-body {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 15px;
+                background: var(--bg);
+            }
+            #inventory-list-body tr {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 12px;
+                gap: 15px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            }
+            #inventory-list-body td { display: block; padding: 0; border: none; }
+            #inventory-list-body td:first-child { width: 80px; height: 80px; }
+            #inventory-list-body td:first-child img { width: 100% !important; height: 100% !important; }
+            #inventory-list-body td:nth-child(2) { flex: 1; }
+            #inventory-list-body td:nth-child(3) { font-weight: 800; }
+        }
+
+        #gallery-preview { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        #gallery-preview img { width: 70px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+<div class="mobile-header">
+    <button onclick="toggleMenu()" style="background:none; border:none; font-size:24px;"><i class="fa-solid fa-bars"></i></button>
+    <div style="font-weight:900; font-size:18px;">GEAR<span style="color:var(--primary)">FETCH</span></div>
+    <div style="width:24px"></div>
+</div>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">GEAR<span>FETCH</span></div>
+    <div class="nav-links">
+        <a href="admin.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i> Analytics</a>
+        <a href="inventory.html" class="nav-item active"><i class="fa-solid fa-box"></i> Products</a>
+        <a href="orders.html" class="nav-item"><i class="fa-solid fa-receipt"></i> Orders</a>
+        <a href="customers.html" class="nav-item"><i class="fa-solid fa-users"></i> Customers</a>
+        <a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+</nav>
+
+<main class="main-content">
+    <form id="inventory-form">
+        <header class="admin-header">
+            <h1 style="font-size: 24px; margin: 0;">Products</h1>
+            <div class="admin-actions">
+                <button type="submit" class="btn-primary">Save Product</button>
+            </div>
+        </header>
+
+        <div class="form-section">
+            <div class="left-col">
+                <div class="card">
+                    <div class="input-group">
+                        <label>Title</label>
+                        <input type="text" id="prod-title" placeholder="e.g. Air Jordan 4 Retro" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Colorway</label>
+                        <input type="text" id="prod-colorway" placeholder="University Blue">
+                    </div>
+                    <div class="input-group">
+                        <label>Description</label>
+                        <textarea id="prod-desc" rows="4" placeholder="Describe materials..."></textarea>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <label>Product Media</label>
+                    <div class="media-upload" onclick="document.getElementById('prod-gallery-files').click()">
+                        <i class="fa-solid fa-images" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>
+                        <span>Tap to upload images</span>
+                        <input type="file" id="prod-gallery-files" accept="image/*" multiple style="display: none;" onchange="previewGallery(this)">
+                    </div>
+                    <div id="gallery-preview"></div>
+                    <small id="file-count-display" style="display: block; margin-top: 10px; font-weight: bold;"></small>
+                </div>
+
+                <div class="card">
+                    <label>Variants (Sizes & Stock)</label>
+                    <table class="variant-table" id="variant-list"></table>
+                    <button type="button" class="btn-secondary" onclick="addNewVariant()" style="width: 100%; margin-top: 15px;">
+                        <i class="fa-solid fa-plus"></i> Add size variant
+                    </button>
+                </div>
+            </div>
+
+            <div class="right-col">
+                <div class="card">
+                    <div class="input-group">
+                        <label>Status</label>
+                        <select id="prod-status">
+                            <option value="active">Active</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Price ($)</label>
+                        <input type="number" id="prod-price" step="0.01" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Was Price ($)</label>
+                        <input type="number" id="prod-compare-price" step="0.01">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <label>Organization</label>
+                    <div class="input-group">
+                        <label>Categories (Hold Ctrl/Cmd to select multiple)</label>
+                        <select id="prod-cat" multiple style="height: 150px;" required>
+                            <option value="latest">Latest Arrivals</option>
+                            <option value="trending">Trending</option>
+                            <option value="sneakers">Sneakers</option>
+                            <option value="slides">Slides</option>
+                            <option value="caps">Caps</option>
+                            <option value="jersey">Jersey</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Brand</label>
+                        <input type="text" id="prod-brand" placeholder="e.g. Jordan">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="inventory-container">
+        <div class="inventory-header">
+            <h3 style="margin:0; font-size: 18px;">Current Inventory</h3>
+            <button type="button" id="bulk-edit-btn" class="btn-secondary" onclick="toggleBulkEdit()">Bulk Edit Prices</button>
+        </div>
+        <table class="inventory-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product Details</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="inventory-list-body"></tbody>
+        </table>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/env.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/admin-dashboard.js"></script>
+
+<script>
+    function toggleMenu() {
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const variantTable = document.getElementById('variant-list');
+        if (variantTable && variantTable.rows.length === 0) {
+            addNewVariant();
+        }
+    });
+
+    function addNewVariant() {
+        const table = document.getElementById('variant-list');
+        const row = table.insertRow();
+        row.innerHTML = `
+            <td><input type="text" placeholder="Size" class="v-size"></td>
+            <td><input type="number" placeholder="Stock" class="v-stock"></td>
+            <td style="width:40px"><button type="button" onclick="this.parentElement.parentElement.remove()" style="color:red; background:none; border:none; font-size:18px;"><i class="fa-solid fa-trash"></i></button></td>
+        `;
+    }
+
+    function previewGallery(input) {
+        const preview = document.getElementById('gallery-preview');
+        const count = document.getElementById('file-count-display');
+        preview.innerHTML = '';
+        if (input.files) {
+            count.innerText = input.files.length + " images selected";
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    preview.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            });
+        }
+    }
+</script>
+</body>
+</html>

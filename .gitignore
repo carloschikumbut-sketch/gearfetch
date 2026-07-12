@@ -1,0 +1,10 @@
+﻿images/
+# Ignore Tailwind executable
+tailwindcss.exe
+
+# Ignore environment files
+js/env.js
+
+# Ignore system files
+.DS_Store
+Thumbs.db

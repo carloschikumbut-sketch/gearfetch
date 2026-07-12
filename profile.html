@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account | GEAR FETCH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #fafafa;
+            color: #000000;
+        }
+
+        .hidden { display: none; }
+
+        /* Professional Status Badges */
+        .badge {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .status-delivered { 
+    background: #ecfdf5; /* Light green background */
+    color: #059669;      /* Dark green text */
+}
+        .status-shipped { background: #eff6ff; color: #2563eb; }
+        .status-pending { background: #f4f4f5; color: #71717a; }
+        .status-processing { background: #fffbeb; color: #d97706; }
+
+        /* Order Card */
+        .order-card {
+            transition: all 0.2s ease;
+            border: 1px solid #e4e4e7;
+            background: white;
+        }
+        .order-card:hover {
+            border-color: #000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* Modal Animation */
+        .modal-animate {
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white border-b border-zinc-100 px-6 py-5 flex justify-between items-center sticky top-0 z-50">
+        <a href="index.html" class="text-zinc-400 hover:text-black transition-colors">
+            <i class="fa-solid fa-arrow-left text-sm"></i>
+        </a>
+        <h1 class="text-[10px] font-800 uppercase tracking-[0.4em]">Member Account</h1>
+        <div class="w-5"></div> 
+    </header>
+
+    <main class="max-w-2xl mx-auto px-6 py-12">
+        
+        <div class="flex flex-col items-center mb-12">
+            <div id="profile-initials" class="w-16 h-16 bg-black text-white text-lg font-700 rounded-full flex items-center justify-center mb-4 shadow-lg uppercase">
+                --
+            </div>
+            <h2 id="profile-name" class="text-xl font-800 tracking-tight">Loading Profile...</h2>
+            <p id="profile-email" class="text-[10px] text-zinc-400 font-600 uppercase tracking-widest mt-1">Authorized Access</p>
+        </div>
+
+        <div class="mb-12">
+            <div class="flex justify-between items-end mb-6 border-b border-zinc-100 pb-4">
+                <div>
+                    <h3 class="text-xs font-800 uppercase tracking-widest">Order History</h3>
+                    <p class="text-[9px] text-zinc-400 font-600 uppercase mt-1">Total number of orders</p>
+                </div>
+                <span id="order-count" class="text-[10px] font-800 bg-zinc-100 px-3 py-1 rounded">0</span>
+            </div>
+            
+            <div id="orders-container" class="space-y-4">
+                <div class="animate-pulse space-y-4">
+                    <div class="h-32 bg-zinc-100 rounded-xl"></div>
+                </div>
+            </div>
+
+            <button onclick="openClaimOrder()" class="w-full mt-6 py-4 border border-dashed border-zinc-300 text-zinc-500 rounded-xl font-800 text-[10px] uppercase tracking-widest hover:border-black hover:text-black transition-all">
+                <i class="fa-solid fa-link mr-2"></i> Link Missing Order
+            </button>
+        </div>
+
+
+            <button onclick="handleSignOut()" class="w-full mt-4 py-4 bg-white border border-zinc-200 text-black rounded-xl font-800 text-[10px] uppercase tracking-widest hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all">
+                Logout Securely
+            </button>
+        </div>
+
+    <div id="tracking-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeTracking()"></div>
+        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[32px] p-8 max-w-2xl mx-auto h-[85vh] overflow-y-auto modal-animate">
+            <div class="w-12 h-1 bg-zinc-200 rounded-full mx-auto mb-8"></div>
+            <div class="flex justify-between items-start mb-10">
+                <div>
+                    <h2 class="text-xl font-800 tracking-tight">Tracking Details</h2>
+                    <p id="track-id" class="text-[10px] font-700 text-zinc-400 uppercase tracking-widest mt-1">ID: --</p>
+                </div>
+                <button onclick="closeTracking()" class="w-10 h-10 bg-zinc-50 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <div id="tracking-log" class="relative space-y-10 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-zinc-100"></div>
+        </div>
+    </div>
+
+    <div id="address-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeAddress()"></div>
+        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[32px] p-8 max-w-2xl mx-auto h-fit modal-animate">
+            <div class="w-12 h-1 bg-zinc-200 rounded-full mx-auto mb-8"></div>
+            <h2 class="text-xl font-800 tracking-tight mb-6">Update Address</h2>
+            <form id="address-form" class="space-y-4 pb-10">
+                <input type="text" id="ship-street" required placeholder="Street & House Number" class="w-full bg-zinc-50 border border-zinc-100 rounded-lg px-5 py-4 text-xs font-600 focus:border-black outline-none transition-all">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="ship-city" required placeholder="City" class="w-full bg-zinc-50 border border-zinc-100 rounded-lg px-5 py-4 text-xs font-600 focus:border-black outline-none transition-all">
+                    <input type="tel" id="ship-phone" required placeholder="Contact Phone" class="w-full bg-zinc-50 border border-zinc-100 rounded-lg px-5 py-4 text-xs font-600 focus:border-black outline-none transition-all">
+                </div>
+                <button type="submit" class="w-full bg-black text-white py-4 rounded-lg font-800 text-[10px] uppercase tracking-widest hover:bg-zinc-800 transition-all mt-4">
+                    Update Record
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div id="claim-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeClaimOrder()"></div>
+        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[32px] p-8 max-w-2xl mx-auto h-fit modal-animate">
+            <div class="w-12 h-1 bg-zinc-200 rounded-full mx-auto mb-8"></div>
+            <h2 class="text-xl font-800 tracking-tight mb-2">Claim Missing Order</h2>
+            <p class="text-[10px] text-zinc-400 uppercase tracking-widest mb-6">Enter details used during checkout to link your order</p>
+            <form id="claim-form" class="space-y-4 pb-10">
+                <input type="text" id="claim-order-id" required placeholder="Order Number (e.g. 101)" class="w-full bg-zinc-50 border border-zinc-100 rounded-lg px-5 py-4 text-xs font-600 focus:border-black outline-none transition-all">
+                <input type="tel" id="claim-phone" required placeholder="Phone Number used at checkout" class="w-full bg-zinc-50 border border-zinc-100 rounded-lg px-5 py-4 text-xs font-600 focus:border-black outline-none transition-all">
+                <button type="submit" class="w-full bg-black text-white py-4 rounded-lg font-800 text-[10px] uppercase tracking-widest hover:bg-zinc-800 transition-all mt-4">
+                    Link Order to Account
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/env.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script>
+        const client = window._supabase;
+        let currentUserId = null;
+
+        async function initProfile() {
+            const { data: { session } } = await client.auth.getSession();
+            if (!session) { window.location.href = 'account.html'; return; }
+
+            const user = session.user;
+            currentUserId = user.id;
+            const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
+            
+            document.getElementById('profile-name').innerText = fullName;
+            document.getElementById('profile-email').innerText = user.email;
+            document.getElementById('profile-initials').innerText = fullName.substring(0, 2).toUpperCase();
+
+            loadOrders(user.email);
+            loadSavedAddress(user.id);
+            setupRealtimeUpdates(user.email);
+        }
+
+        function setupRealtimeUpdates(email) {
+            client
+                .channel('db_sync')
+                .on('postgres_changes', { 
+                    event: '*', 
+                    schema: 'public', 
+                    table: 'orders',
+                    filter: `customer_email=eq.${email}` 
+                }, (payload) => {
+                    loadOrders(email);
+                    // Refresh modal if open
+                    const modal = document.getElementById('tracking-modal');
+                    if (!modal.classList.contains('hidden')) {
+                        const orderId = document.getElementById('track-id').innerText.replace('ID: #', '');
+                        if(payload.new && payload.new.id == orderId) {
+                            renderTrackingSteps(payload.new.status);
+                        }
+                    }
+                })
+                .subscribe();
+        }
+
+        async function loadOrders(email) {
+            const container = document.getElementById('orders-container');
+            const { data: orders, error } = await client
+        .from('orders')
+        .select('*')
+        .or(`customer_email.eq.${email},user_id.eq.${currentUserId}`)
+        .order('created_at', { ascending: false });
+            if (error) {
+                container.innerHTML = `<p class="text-xs text-red-500 p-4 bg-red-50 rounded-lg">Sync Error: ${error.message}</p>`;
+                return;
+            }
+
+            if (!orders || orders.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white rounded-xl p-12 border border-dashed border-zinc-200 text-center">
+                        <i class="fa-solid fa-box-open text-zinc-200 text-3xl mb-4"></i>
+                        <p class="text-[10px] font-700 text-zinc-400 uppercase tracking-widest mb-6">No order activity recorded</p>
+                        <button onclick="openClaimOrder()" class="text-[10px] font-black uppercase tracking-widest text-red-600 border border-red-600 px-6 py-3 rounded-lg hover:bg-red-600 hover:text-white transition-all">
+                            Claim Missing Order
+                        </button>
+                    </div>`;
+                return;
+            }
+
+            document.getElementById('order-count').innerText = orders.length;
+            
+            container.innerHTML = orders.map(order => {
+                const status = (order.status || 'Pending');
+                const orderIdStr = String(order.id);
+                
+                // Helper to parse the jsonb items
+                let itemSummary = "Sneaker Collection Item";
+                try {
+                    const items = typeof order.items === 'string' ? JSON.parse(order.items) : order.items;
+                    if(Array.isArray(items) && items.length > 0) {
+                        itemSummary = items[0].name || items[0].product_name || itemSummary;
+                        if(items.length > 1) itemSummary += ` + ${items.length - 1} more`;
+                    }
+                } catch(e) { console.log("Item parse error", e); }
+
+                const statusClass = status.toLowerCase() === 'delivered' ? 'status-delivered' : 
+                                  status.toLowerCase() === 'pending' ? 'status-pending' : 
+                                  status.toLowerCase() === 'processing' ? 'status-processing' : 'status-shipped';
+                
+                return `
+                <div class="order-card rounded-xl p-5">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[9px] font-800 text-zinc-400 uppercase tracking-widest block mb-1">Order Ref #${orderIdStr}</span>
+                            <h4 class="text-xs font-800 text-black uppercase tracking-tight">${itemSummary}</h4>
+                        </div>
+                        <span class="badge ${statusClass}">${status}</span>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-zinc-50 pt-4 mt-2">
+                        <div>
+                            <p class="text-[8px] text-zinc-400 font-700 uppercase tracking-widest">Final Total</p>
+                            <p class="text-lg font-800 tracking-tight">$${parseFloat(order.total_price || 0).toFixed(2)}</p>
+                        </div>
+                        <button onclick="openTracking('${order.id}', '${status}')" class="bg-black text-white px-5 py-2.5 rounded-lg text-[9px] font-800 uppercase tracking-widest hover:bg-zinc-800 transition-all">
+                            Live Tracking
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function loadSavedAddress(userId) {
+            const { data } = await client.from('profiles').select('city, address, phone').eq('id', userId).single();
+            if (data) {
+                document.getElementById('address-status').innerText = `${data.city || 'Configured'}`;
+                document.getElementById('ship-street').value = data.address || '';
+                document.getElementById('ship-city').value = data.city || '';
+                document.getElementById('ship-phone').value = data.phone || '';
+            }
+        }
+
+        document.getElementById('address-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const updates = {
+                id: currentUserId,
+                address: document.getElementById('ship-street').value,
+                city: document.getElementById('ship-city').value,
+                phone: document.getElementById('ship-phone').value,
+                updated_at: new Date()
+            };
+            const { error } = await client.from('profiles').upsert(updates);
+            if (!error) {
+                alert("Vault Address Updated Successfully");
+                closeAddress();
+                loadSavedAddress(currentUserId);
+            }
+        });
+
+        function renderTrackingSteps(statusLabel) {
+            const status = statusLabel.toLowerCase();
+            const log = document.getElementById('tracking-log');
+            
+            const steps = [
+                { title: 'Order Logged', desc: 'Securely recorded in database', done: true },
+                { title: 'Processing', desc: 'Preparing for courier pickup', done: status !== 'pending' },
+                { title: 'Shipped', desc: 'Package is in transit', done: ['shipped', 'delivered', 'in transit'].includes(status) },
+                { title: 'Delivered', desc: 'Successfully handed over', done: status === 'delivered' }
+            ];
+
+            log.innerHTML = steps.map((step, i) => `
+                <div class="relative flex gap-6 ${step.done ? 'opacity-100' : 'opacity-20'}">
+                    <div class="z-10 w-6 h-6 rounded-full ${step.done ? 'bg-black' : 'bg-zinc-200'} border-4 border-white flex items-center justify-center text-[9px] text-white font-800">
+                        ${i + 1}
+                    </div>
+                    <div>
+                        <p class="text-xs font-800 uppercase tracking-tight">${step.title}</p>
+                        <p class="text-[10px] text-zinc-400 font-500 uppercase tracking-widest mt-0.5">${step.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.openTracking = (id, status) => {
+            document.getElementById('track-id').innerText = `ID: #${id}`;
+            renderTrackingSteps(status);
+            document.getElementById('tracking-modal').classList.remove('hidden');
+        };
+
+        window.closeTracking = () => document.getElementById('tracking-modal').classList.add('hidden');
+        window.openAddress = () => document.getElementById('address-modal').classList.remove('hidden');
+        window.closeAddress = () => document.getElementById('address-modal').classList.add('hidden');
+        window.handleSignOut = async () => {
+            await client.auth.signOut();
+            window.location.href = 'index.html';
+        };
+
+        document.addEventListener('DOMContentLoaded', initProfile);
+
+
+
+
+
+
+        window.openClaimOrder = () => document.getElementById('claim-modal').classList.remove('hidden');
+        window.closeClaimOrder = () => document.getElementById('claim-modal').classList.add('hidden');
+
+     document.getElementById('claim-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const orderId = parseInt(document.getElementById('claim-order-id').value.trim());
+    const rawInput = document.getElementById('claim-phone').value.trim();
+    
+    const targetDigits = getLastNineDigits(rawInput);
+
+    // This query finds the order by ID, then checks if the 
+    // RIGHT(customer_contact, 9) matches our targetDigits
+    const { data, error } = await client
+        .from('orders')
+        .update({ user_id: currentUserId })
+        .eq('id', orderId)
+        .filter('customer_contact', 'ilike', `%${targetDigits}`) // The % matches any prefix
+        .is('user_id', null)
+        .select();
+
+    if (error) {
+        alert("System error: " + error.message);
+    } else if (!data || data.length === 0) {
+        alert("No record found. Please double-check your Order ID and phone number.");
+    } else {
+        alert("Order successfully linked!");
+        closeClaimOrder();
+        initProfile();
+    }
+});
+
+
+
+function getLastNineDigits(phone) {
+    // 1. Remove all non-numeric characters
+    let cleaned = phone.replace(/\D/g, '');
+    
+    // 2. Return the last 9 digits
+    // If the string is shorter than 9, this returns the whole string
+    return cleaned.slice(-9);
+}
+
+    </script>
+</body>
+</html>
