@@ -7,6 +7,11 @@
 const USER_KEY = 'sneaker-lab-user';
 const CART_KEY = 'sneaker-lab-cart';
 
+// Add this to the top of js/main.js
+function renderGuestUI() {
+    console.log("UI system ready");
+}
+
 // Add the missing mockLogin function here so all pages can use it
 function mockLogin(email = "sneakerhead@lab.com") {
     const userData = {
